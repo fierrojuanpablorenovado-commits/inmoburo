@@ -1,0 +1,14 @@
+node_modules/
+.env
+.env.local
+.env*.local
+.vercel
+dev.db
+dev.db-journal
+*.db
+uploads/
+*.log
+.DS_Store
+.idea
+.vscode
+prisma/migrations/

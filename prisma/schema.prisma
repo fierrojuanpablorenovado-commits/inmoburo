@@ -1,0 +1,287 @@
+// INMOBURO SaaS — Multi-tenant schema
+// Cada Organization es un tenant aislado. Usuarios, datos y configuración por org.
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --------- ORG / USERS ---------
+
+model Organization {
+  id           String   @id @default(cuid())
+  name         String
+  slug         String   @unique
+  plan         String   @default("free") // free / starter / pro / enterprise
+  logoUrl      String?
+  phone        String?
+  address      String?
+  rfc          String?  // RFC fiscal de la empresa
+  webhookUrl   String?  // para integraciones (WhatsApp, etc.)
+  apiKey       String   @unique @default(cuid())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  users        User[]
+  tenants      Tenant[]
+  requests     RentalRequest[]
+  contracts    Contract[]
+  policies     Policy[]
+  payments     Payment[]
+  activities   Activity[]
+  notifications Notification[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         String   @default("admin") // admin / asesor / viewer
+  avatarUrl    String?
+  active       Boolean  @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  requestsCreated RentalRequest[]
+  activities      Activity[]
+
+  @@index([organizationId])
+}
+
+// --------- INQUILINOS ---------
+
+model Tenant {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  fullName     String
+  email        String
+  phone        String
+  rfc          String?
+  curp         String?
+  dob          String?  // YYYY-MM-DD
+  occupation   String?
+  employer     String?
+  monthlyIncome Float?
+  tenure       String?  // antigüedad laboral
+  address      String?
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  requests     RentalRequest[]
+  contracts    Contract[]
+
+  @@index([organizationId])
+  @@index([email])
+}
+
+// --------- SOLICITUDES ---------
+
+model RentalRequest {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  createdById  String?
+  createdBy    User?    @relation(fields: [createdById], references: [id])
+
+  propertyAddress String
+  monthlyRent  Float
+  plan         String   // multireporte / multiproteccion / premium
+  withFiador   Boolean  @default(false)
+  withCorporate Boolean @default(false) // persona moral
+  status       String   @default("nuevo") // nuevo / revision / validado / rechazado
+  progress     Int      @default(15) // 0-100
+  publicToken  String   @unique @default(cuid()) // para liga del inquilino
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  validatedAt  DateTime?
+
+  documents    Document[]
+  report       Report?
+  contract     Contract?
+  policy       Policy?
+  payments     Payment[]
+
+  @@index([organizationId])
+  @@index([tenantId])
+  @@index([status])
+}
+
+// --------- DOCUMENTOS (subidos por inquilino) ---------
+
+model Document {
+  id           String   @id @default(cuid())
+  requestId    String
+  request      RentalRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  type         String   // ine / domicilio / ingresos / banco / referencias / empleo / otro
+  filename     String
+  storagePath  String
+  mimeType     String
+  size         Int
+  status       String   @default("revision") // revision / validado / rechazado
+  notes        String?
+
+  uploadedAt   DateTime @default(now())
+  reviewedAt   DateTime?
+
+  @@index([requestId])
+}
+
+// --------- MULTIREPORTE ---------
+
+model Report {
+  id           String   @id @default(cuid())
+  requestId    String   @unique
+  request      RentalRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  score        Int      // 0-100
+  identityOk   Boolean
+  creditOk     Boolean
+  legalOk      Boolean
+  blacklistOk  Boolean
+  fraudRisk    String   // low / medium / high
+  capacityRatio Float   // ingreso / renta
+  observations String?
+  rawData      String   // JSON con detalle completo
+
+  generatedAt  DateTime @default(now())
+  pdfPath      String?
+
+  @@index([requestId])
+}
+
+// --------- CONTRATOS ---------
+
+model Contract {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  requestId    String   @unique
+  request      RentalRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  tenantId     String
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+
+  startDate    String   // YYYY-MM-DD
+  endDate      String
+  monthlyRent  Float
+  deposit      Float
+  status       String   @default("draft") // draft / activo / vencido / cancelado
+  signedAt     DateTime?
+  pdfPath      String?
+  contractData String   // JSON con cláusulas
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+// --------- PÓLIZAS (Multiprotección) ---------
+
+model Policy {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  requestId    String   @unique
+  request      RentalRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  plan         String   // multiproteccion / premium
+  coverage     Float    // monto cubierto
+  startDate    String
+  endDate      String
+  status       String   @default("activa") // activa / siniestrada / vencida
+  policyNumber String   @unique
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+// --------- PAGOS ---------
+
+model Payment {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  requestId    String?
+  request      RentalRequest? @relation(fields: [requestId], references: [id])
+
+  concept      String
+  amount       Float
+  method       String   // card / transfer / oxxo
+  status       String   @default("pending") // pending / paid / failed / refunded
+  reference    String?  // mock stripe ref
+  paidAt       DateTime?
+  metadata     String?  // JSON
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+// --------- ACTIVIDAD (audit log) ---------
+
+model Activity {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  userId       String?
+  user         User?    @relation(fields: [userId], references: [id])
+
+  action       String   // request.created, request.validated, contract.signed, etc.
+  entityType   String   // request / contract / policy / payment / user
+  entityId     String?
+  description  String
+  icon         String?
+  metadata     String?  // JSON
+
+  createdAt    DateTime @default(now())
+
+  @@index([organizationId])
+  @@index([createdAt])
+}
+
+// --------- NOTIFICACIONES ---------
+
+model Notification {
+  id           String   @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  channel      String   // email / whatsapp / inapp
+  recipient    String
+  subject      String
+  body         String
+  status       String   @default("sent") // sent / failed / queued
+  sentAt       DateTime @default(now())
+  metadata     String?
+
+  @@index([organizationId])
+}

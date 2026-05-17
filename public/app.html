@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel InmoBuró — Gestión inmobiliaria</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a1628'/%3E%3Ctext x='50' y='68' font-family='Inter,sans-serif' font-size='62' font-weight='900' fill='%2300c896' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- AUTH GATE: shows login OR signup -->
+<div class="modal-overlay" id="auth-gate">
+  <div class="modal" style="max-width:480px">
+    <div style="display:flex;gap:6px;margin-bottom:24px;background:var(--gray-100);padding:4px;border-radius:999px;width:fit-content">
+      <button type="button" class="auth-tab active" data-tab="login">Iniciar sesión</button>
+      <button type="button" class="auth-tab" data-tab="signup">Crear cuenta</button>
+    </div>
+
+    <div id="tab-login">
+      <h2>Bienvenido de vuelta</h2>
+      <p class="muted">Accede a tu panel InmoBuró</p>
+      <form id="login-form">
+        <div class="field"><label>Correo</label><input type="email" name="email" required value="jp@inmoburo.com.mx"></div>
+        <div class="field"><label>Contraseña</label><input type="password" name="password" required value="demo123"></div>
+        <button class="btn btn-primary btn-block btn-lg" type="submit">Entrar al panel</button>
+        <p style="font-size:12px;color:var(--gray-500);text-align:center;margin-top:14px">Demo: jp@inmoburo.com.mx / demo123</p>
+      </form>
+    </div>
+
+    <div id="tab-signup" style="display:none">
+      <h2>Crea tu cuenta gratis</h2>
+      <p class="muted">Empieza a investigar inquilinos en minutos.</p>
+      <form id="signup-form">
+        <div class="field"><label>Nombre completo</label><input type="text" name="name" required></div>
+        <div class="field"><label>Correo</label><input type="email" name="email" required></div>
+        <div class="field"><label>Contraseña</label><input type="password" name="password" required minlength="6"></div>
+        <div class="field"><label>Empresa / Inmobiliaria</label><input type="text" name="company" required></div>
+        <div class="field"><label>Teléfono</label><input type="tel" name="phone"></div>
+        <button class="btn btn-primary btn-block btn-lg" type="submit">Crear cuenta y entrar →</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="app-shell" id="app" style="display:none">
+  <aside class="app-sidebar" id="sidebar">
+    <a href="#/dashboard" class="logo"><span class="logo-mark">I</span><span>InmoBuró</span></a>
+    <nav class="sidebar-nav">
+      <div class="nav-section">General</div>
+      <a href="#/dashboard" data-view="dashboard"><span class="icon">📊</span> Dashboard</a>
+      <a href="#/solicitudes" data-view="solicitudes"><span class="icon">📋</span> Solicitudes</a>
+      <a href="#/inquilinos" data-view="inquilinos"><span class="icon">👥</span> Inquilinos</a>
+      <a href="#/reportes" data-view="reportes"><span class="icon">📑</span> Multireportes</a>
+
+      <div class="nav-section">Operación</div>
+      <a href="#/contratos" data-view="contratos"><span class="icon">📄</span> Contratos</a>
+      <a href="#/proteccion" data-view="proteccion"><span class="icon">🛡️</span> Pólizas</a>
+      <a href="#/pagos" data-view="pagos"><span class="icon">💳</span> Pagos</a>
+
+      <div class="nav-section">Cuenta</div>
+      <a href="#/equipo" data-view="equipo"><span class="icon">🏢</span> Equipo</a>
+      <a href="#/organizacion" data-view="organizacion"><span class="icon">⚙️</span> Organización</a>
+      <a href="#" id="logout-btn"><span class="icon">↩️</span> Cerrar sesión</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="user-avatar">?</div>
+        <div class="meta">
+          <div class="name" id="user-name">—</div>
+          <div class="email" id="user-email">—</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="app-main">
+    <header class="app-topbar">
+      <div class="page-title" id="page-title">Dashboard</div>
+      <div class="search" style="position:relative">
+        <span>🔍</span>
+        <input type="text" id="global-search" placeholder="Buscar inquilino, solicitud, contrato...">
+        <div id="search-results"></div>
+      </div>
+      <div class="actions">
+        <button class="icon-btn" title="Notificaciones">🔔<span class="dot"></span></button>
+        <button class="btn btn-primary btn-sm" id="quick-new">+ Nueva solicitud</button>
+      </div>
+    </header>
+    <main class="app-content" id="view"><div class="empty"><div class="icon-big">⏳</div>Cargando...</div></main>
+  </div>
+</div>
+
+<!-- NEW REQUEST MODAL -->
+<div class="modal-overlay" id="modal-new">
+  <div class="modal" style="max-width:580px">
+    <button class="modal-close" data-close>×</button>
+    <h2>Nueva solicitud de renta</h2>
+    <p class="muted">Crea la solicitud y se enviará liga al inquilino para que suba documentos.</p>
+    <form id="new-req-form">
+      <h3 style="font-size:13px;font-weight:700;color:var(--gray-500);letter-spacing:1.5px;text-transform:uppercase;margin:12px 0 12px">Inquilino</h3>
+      <div class="form-grid">
+        <div class="field"><label>Nombre completo *</label><input type="text" name="fullName" required></div>
+        <div class="field"><label>Correo *</label><input type="email" name="email" required></div>
+        <div class="field"><label>Teléfono *</label><input type="tel" name="phone" required></div>
+        <div class="field"><label>RFC</label><input type="text" name="rfc" maxlength="13"></div>
+        <div class="field"><label>Ocupación</label><input type="text" name="occupation"></div>
+        <div class="field"><label>Ingreso mensual (MXN)</label><input type="number" name="monthlyIncome"></div>
+      </div>
+      <h3 style="font-size:13px;font-weight:700;color:var(--gray-500);letter-spacing:1.5px;text-transform:uppercase;margin:22px 0 12px">Inmueble y plan</h3>
+      <div class="form-grid">
+        <div class="field field-full"><label>Dirección del inmueble *</label><input type="text" name="propertyAddress" required placeholder="Av. Vallarta 3050, Providencia, GDL"></div>
+        <div class="field"><label>Renta mensual (MXN) *</label><input type="number" name="monthlyRent" required></div>
+        <div class="field">
+          <label>Plan *</label>
+          <select name="plan" required>
+            <option value="multireporte">Multireporte ($999)</option>
+            <option value="multiproteccion">Multiprotección ($4,600)</option>
+            <option value="premium" selected>Premium ($7,500)</option>
+          </select>
+        </div>
+        <div class="field"><label>Fiador</label><select name="withFiador"><option value="false">No</option><option value="true">Sí (+$299)</option></select></div>
+        <div class="field"><label>Persona moral</label><select name="withCorporate"><option value="false">No</option><option value="true">Sí (+$200)</option></select></div>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" type="submit" style="margin-top:18px">Crear solicitud →</button>
+    </form>
+  </div>
+</div>
+
+<style>
+.auth-tab { padding:8px 18px; border-radius:999px; font-weight:600; color:var(--gray-500); font-size:14px; cursor:pointer; border:none; background:transparent; }
+.auth-tab.active { background:white; color:var(--navy-900); box-shadow:var(--sh-sm); }
+#search-results {
+  position:absolute; top:100%; left:0; right:0; margin-top:6px;
+  background:white; border-radius:10px; box-shadow:var(--sh-lg);
+  max-height:360px; overflow:auto; z-index:30; display:none;
+}
+#search-results.open { display:block; }
+.sr-item { display:block; padding:10px 14px; border-bottom:1px solid var(--gray-100); font-size:14px; color:var(--gray-800); cursor:pointer; }
+.sr-item:hover { background:var(--gray-50); }
+.sr-section { padding:6px 14px; font-size:11px; font-weight:700; color:var(--gray-500); text-transform:uppercase; letter-spacing:1px; background:var(--gray-50); }
+</style>
+
+<script src="assets/api.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

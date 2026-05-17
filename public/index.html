@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>InmoBuró — La mejor solución para rentar rápido y seguro</title>
+<meta name="description" content="Plataforma definitiva para asesores inmobiliarios y propietarios. Investigación de inquilinos 10x más rápida, contratos profesionales y póliza jurídica.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230a1628'/%3E%3Ctext x='50' y='68' font-family='Inter,sans-serif' font-size='62' font-weight='900' fill='%2300c896' text-anchor='middle'%3EI%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">I</span>
+      <span>InmoBuró</span>
+    </a>
+    <nav class="nav-main">
+      <a href="#soluciones" class="has-dropdown">Soluciones</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#precios">Precios</a>
+      <a href="#testimonios">Clientes</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn btn-ghost" data-open="login">Iniciar sesión</button>
+      <a href="app.html" class="btn btn-primary">Crear cuenta gratis</a>
+      <button class="menu-toggle" aria-label="Menú">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <span class="hero-eyebrow">● Plataforma proptech #1 en México</span>
+      <h1>La mejor solución para rentar <span class="accent">rápido y seguro</span></h1>
+      <p class="lead">La plataforma definitiva para asesores inmobiliarios y propietarios. Gestiona, protege y optimiza todas tus operaciones de renta en un solo lugar.</p>
+      <div class="hero-ctas">
+        <a href="app.html" class="btn btn-primary btn-lg">Crear cuenta gratis →</a>
+        <button class="btn btn-secondary btn-lg" data-open="demo">Agendar demo</button>
+      </div>
+      <div class="hero-trust">
+        <div><strong>10x</strong><br>más rápido</div>
+        <div style="border-left:1px solid rgba(255,255,255,.15); height:40px"></div>
+        <div><strong>+5,000</strong><br>inmuebles protegidos</div>
+        <div style="border-left:1px solid rgba(255,255,255,.15); height:40px"></div>
+        <div><strong>1 día</strong><br>para el reporte</div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="dashboard-mock">
+        <div class="dm-header">
+          <div class="dm-title">Solicitudes activas</div>
+          <span class="dm-badge">En vivo</span>
+        </div>
+        <div class="dm-row">
+          <div class="dm-avatar">CR</div>
+          <div>
+            <div class="dm-name">Carlos Ramírez</div>
+            <div class="dm-meta">Polanco, CDMX · $28,000/mes</div>
+          </div>
+          <span class="dm-status ok">Validado</span>
+        </div>
+        <div class="dm-row">
+          <div class="dm-avatar" style="background:linear-gradient(135deg,#7c3aed,#ec4899)">MG</div>
+          <div>
+            <div class="dm-name">María González</div>
+            <div class="dm-meta">Providencia, GDL · $18,500/mes</div>
+          </div>
+          <span class="dm-status rev">En revisión</span>
+        </div>
+        <div class="dm-row">
+          <div class="dm-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">JL</div>
+          <div>
+            <div class="dm-name">Juan López</div>
+            <div class="dm-meta">San Pedro, MTY · $42,000/mes</div>
+          </div>
+          <span class="dm-status rej">Rechazado</span>
+        </div>
+        <div class="dm-score">
+          <div>
+            <div class="lbl">Score promedio del mes</div>
+          </div>
+          <div class="val">87/100</div>
+        </div>
+      </div>
+      <div class="float-card fc1">
+        <div class="icon">✓</div>
+        <div>
+          <div style="font-weight:700">Identidad validada</div>
+          <div style="font-size:11px;color:var(--gray-500)">Hace 2 minutos</div>
+        </div>
+      </div>
+      <div class="float-card fc2">
+        <div class="icon">📄</div>
+        <div>
+          <div style="font-weight:700">Contrato listo</div>
+          <div style="font-size:11px;color:var(--gray-500)">Firmar ahora</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS STRIP -->
+<section class="logos-strip">
+  <div class="container">
+    <h3>Más de 5,000 profesionales inmobiliarios confían en InmoBuró</h3>
+    <div class="logos-track">
+      <div class="logo-item">AMPI</div>
+      <div class="logo-item">CENTURY 21</div>
+      <div class="logo-item">RE/MAX</div>
+      <div class="logo-item">COLDWELL BANKER</div>
+      <div class="logo-item">SOTHEBY'S</div>
+      <div class="logo-item">KELLER WILLIAMS</div>
+      <div class="logo-item">VINTE</div>
+      <div class="logo-item">ALLPRO</div>
+      <div class="logo-item">REALTY</div>
+      <div class="logo-item">INMOBILIA</div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON TABLE -->
+<section class="section compare-section">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Comparativa</span>
+      <h2>El riesgo tradicional vs la certeza InmoBuró</h2>
+      <p>Olvídate de los métodos manuales. Profesionaliza tus operaciones con tecnología real.</p>
+    </div>
+    <div class="compare-table">
+      <div class="compare-row head">
+        <div></div>
+        <div>Método tradicional</div>
+        <div class="ok-col">Con InmoBuró</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Verificación del inquilino</div>
+        <div class="bad"><span class="icon-x">✕</span> Llamadas y referencias informales</div>
+        <div class="good"><span class="icon-check">✓</span> Análisis 360° y score de confiabilidad</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Contrato de arrendamiento</div>
+        <div class="bad"><span class="icon-x">✕</span> Plantillas genéricas sin respaldo</div>
+        <div class="good"><span class="icon-check">✓</span> Contrato profesional + convenio justicia alternativa</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Proceso ante incumplimiento</div>
+        <div class="bad"><span class="icon-x">✕</span> Juicios de 1 a 6 años</div>
+        <div class="good"><span class="icon-check">✓</span> Recuperación en 2 a 4 meses</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Tiempos de respuesta</div>
+        <div class="bad"><span class="icon-x">✕</span> Días o semanas de espera</div>
+        <div class="good"><span class="icon-check">✓</span> Reporte completo en 1 día hábil</div>
+      </div>
+      <div class="compare-row">
+        <div class="label">Costo de incumplimiento</div>
+        <div class="bad"><span class="icon-x">✕</span> Honorarios + meses de renta perdidos</div>
+        <div class="good"><span class="icon-check">✓</span> Cobertura 100% honorarios legales</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3-STEP PROCESS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Cómo funciona</span>
+      <h2>Renta segura en 3 pasos</h2>
+      <p>Diseñado para que cierres más rentas, más rápido y con cero estrés.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Crea la solicitud</h3>
+        <p>Personaliza requisitos como fiador, persona moral o convenio y la plataforma se adapta.</p>
+        <ul>
+          <li>Formularios inteligentes y adaptables</li>
+          <li>Plantillas predefinidas por tipo de inmueble</li>
+          <li>Liga personalizada para el inquilino</li>
+          <li>Envío por WhatsApp, correo o SMS</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Seguimiento en tiempo real</h3>
+        <p>Visualiza el estatus de cada documento y recibe alertas automáticas a cada paso.</p>
+        <ul>
+          <li>Estados: Validado / En revisión / Rechazado</li>
+          <li>Notificaciones push, correo y WhatsApp</li>
+          <li>Historial completo de cada solicitud</li>
+          <li>Comunicación directa con el inquilino</li>
+        </ul>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Elige y protege</h3>
+        <p>Recibe el Multireporte y activa la póliza Multiprotección con un solo clic.</p>
+        <ul>
+          <li>Score de confiabilidad 0-100</li>
+          <li>Análisis legal, crediticio y de identidad</li>
+          <li>Contrato firmado digitalmente</li>
+          <li>Póliza jurídica activada al instante</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS / PRICING CARDS -->
+<section class="section solutions-section" id="soluciones">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Soluciones</span>
+      <h2>Elige el nivel de protección perfecto</h2>
+      <p>Desde la investigación inicial hasta la cobertura total de honorarios y ejecución judicial.</p>
+    </div>
+    <div class="solutions-grid">
+
+      <div class="sol-card">
+        <div class="sol-icon">🔍</div>
+        <h3>Multireporte Inquilino</h3>
+        <p class="desc">Investigación completa del inquilino, 10 veces más rápida que los métodos tradicionales.</p>
+        <div class="sol-price"><span class="currency">$</span>999 <span class="period">MXN</span></div>
+        <ul class="sol-features">
+          <li>Validación de identidad</li>
+          <li>Antecedentes legales nacional</li>
+          <li>Historial crediticio completo</li>
+          <li>Análisis de capacidad de pago</li>
+          <li>Listas negras nacionales e internacionales</li>
+          <li>Verificación de garantías</li>
+          <li>Score de confiabilidad 0-100</li>
+        </ul>
+        <a href="app.html" class="btn btn-secondary">Empezar</a>
+      </div>
+
+      <div class="sol-card">
+        <div class="sol-icon" style="background:linear-gradient(135deg,#3b82f6,#6366f1)">🛡️</div>
+        <h3>Multiprotección</h3>
+        <p class="desc">Multireporte + contrato profesional + convenio de justicia alternativa con respaldo legal.</p>
+        <div class="sol-price"><span class="currency">$</span>4,600 <span class="period">MXN</span></div>
+        <ul class="sol-features">
+          <li>Todo lo de Multireporte Inquilino</li>
+          <li>Contrato de arrendamiento profesional</li>
+          <li>Convenio de Justicia Alternativa</li>
+          <li>Firma digital con validez legal</li>
+          <li>Respaldo de equipo de expertos</li>
+          <li>Recuperación en 2 a 4 meses</li>
+        </ul>
+        <a href="app.html" class="btn btn-secondary">Contratar</a>
+      </div>
+
+      <div class="sol-card featured">
+        <span class="badge-best">MÁS VENDIDO</span>
+        <div class="sol-icon" style="background:linear-gradient(135deg,#c6f000,#00c896)">⭐</div>
+        <h3>Multiprotección PREMIUM</h3>
+        <p class="desc">Cobertura total: incluye honorarios legales y ejecución judicial sin costo extra.</p>
+        <div class="sol-price"><span class="currency">$</span>7,500 <span class="period">MXN</span></div>
+        <ul class="sol-features">
+          <li>Todo lo de Multiprotección</li>
+          <li>Intervención experta antes del juicio</li>
+          <li>Cobertura 100% honorarios legales</li>
+          <li>Ejecución judicial sin costo</li>
+          <li>Servicio de cobranza incluido</li>
+          <li>Soporte prioritario 24/7</li>
+          <li>Cubre rentas hasta $100,000 MXN</li>
+        </ul>
+        <a href="app.html" class="btn btn-primary">Contratar PREMIUM →</a>
+      </div>
+
+    </div>
+    <p style="text-align:center; margin-top:30px; color:rgba(255,255,255,.55); font-size:14px;">Add-ons: Investigación de fiador +$299 MXN · Persona moral +$200 MXN · Rentas mayores a $100K, 10% adicional sobre excedente.</p>
+  </div>
+</section>
+
+<!-- HOW IT WORKS (6 steps) -->
+<section class="section" id="como-funciona">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">El proceso completo</span>
+      <h2>De la solicitud al contrato firmado</h2>
+      <p>Cada paso diseñado para darte certeza, rapidez y respaldo legal real.</p>
+    </div>
+    <div class="process-grid">
+      <div class="proc-card">
+        <div class="step-tag">Paso 1</div>
+        <h4>Inicia en minutos</h4>
+        <p>Crea la solicitud con requisitos personalizables. La plataforma se ajusta a cada caso.</p>
+      </div>
+      <div class="proc-card">
+        <div class="step-tag">Paso 2</div>
+        <h4>Carga 100% digital</h4>
+        <p>Tu inquilino recibe una liga única para subir documentos de forma segura e intuitiva.</p>
+      </div>
+      <div class="proc-card">
+        <div class="step-tag">Paso 3</div>
+        <h4>Monitoreo en vivo</h4>
+        <p>Control total con estatus detallado de cada requisito y notificaciones automáticas.</p>
+      </div>
+      <div class="proc-card">
+        <div class="step-tag">Paso 4</div>
+        <h4>Verificación profunda</h4>
+        <p>Análisis crediticio, antecedentes legales nacionales y prevención antifraude.</p>
+      </div>
+      <div class="proc-card">
+        <div class="step-tag">Paso 5</div>
+        <h4>Decisión informada</h4>
+        <p>Multireporte completo en 1 día hábil con Score de confiabilidad y todo el detalle.</p>
+      </div>
+      <div class="proc-card">
+        <div class="step-tag">Paso 6</div>
+        <h4>Renta protegida</h4>
+        <p>Elige tu nivel de Multiprotección y firma el contrato con respaldo legal completo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section compare-section" id="precios">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Precios transparentes</span>
+      <h2>Sin mensualidades. Sin sorpresas.</h2>
+      <p>Pagas por solicitud. Sin contratos forzosos ni cuotas ocultas.</p>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:24px; max-width:1000px; margin:0 auto;">
+      <div class="card" style="text-align:center; padding:36px 28px;">
+        <h3 style="font-size:18px;color:var(--gray-500);margin-bottom:12px;">Multireporte</h3>
+        <div style="font-size:42px;font-weight:800;color:var(--navy-900);letter-spacing:-1px;">$999</div>
+        <p style="color:var(--gray-500);font-size:14px;margin-bottom:24px;">MXN por solicitud</p>
+        <a href="app.html" class="btn btn-outline btn-block">Empezar</a>
+      </div>
+      <div class="card" style="text-align:center; padding:36px 28px;">
+        <h3 style="font-size:18px;color:var(--gray-500);margin-bottom:12px;">Multiprotección</h3>
+        <div style="font-size:42px;font-weight:800;color:var(--navy-900);letter-spacing:-1px;">$4,600</div>
+        <p style="color:var(--gray-500);font-size:14px;margin-bottom:24px;">MXN por contrato</p>
+        <a href="app.html" class="btn btn-outline btn-block">Contratar</a>
+      </div>
+      <div class="card" style="text-align:center; padding:36px 28px; border:2px solid var(--teal-500); position:relative;">
+        <span style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--lime-500);color:var(--navy-900);padding:5px 14px;border-radius:99px;font-size:11px;font-weight:800;letter-spacing:.5px;">MÁS VENDIDO</span>
+        <h3 style="font-size:18px;color:var(--teal-600);margin-bottom:12px;">Premium</h3>
+        <div style="font-size:42px;font-weight:800;color:var(--navy-900);letter-spacing:-1px;">$7,500</div>
+        <p style="color:var(--gray-500);font-size:14px;margin-bottom:24px;">MXN por póliza completa</p>
+        <a href="app.html" class="btn btn-primary btn-block">Contratar Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section test-section" id="testimonios">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Testimonios</span>
+      <h2>Lo que dicen nuestros clientes</h2>
+      <p>Más de 5,000 profesionales inmobiliarios ya operan con InmoBuró.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Cerré 3 rentas en una semana usando InmoBuró. La rapidez del reporte me permitió decidir el mismo día y mis clientes están encantados."</p>
+        <div class="test-author">
+          <div class="test-avatar">EM</div>
+          <div class="test-info"><div class="name">Esteban Morales</div><div class="role">Broker · Century 21 Polanco</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"La Multiprotección Premium me ahorró meses de juicio. En 3 meses recuperé el inmueble y los honorarios estuvieron cubiertos al 100%."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#8b5cf6,#ec4899)">LR</div>
+          <div class="test-info"><div class="name">Laura Reyes</div><div class="role">Propietaria · CDMX</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"El panel de gestión nos permite manejar 80+ solicitudes simultáneas. Antes era un caos en hojas de Excel, hoy todo está bajo control."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">AT</div>
+          <div class="test-info"><div class="name">Adrián Torres</div><div class="role">Gerente · RE/MAX Guadalajara</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Soy propietaria de 6 departamentos. InmoBuró me dio la tranquilidad de no tener que perseguir referencias ni rezar para que paguen."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#10b981,#06b6d4)">PS</div>
+          <div class="test-info"><div class="name">Patricia Salinas</div><div class="role">Inversionista inmobiliaria</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"El score de confiabilidad es brutal. Identifiqué dos potenciales fraudes antes de firmar. InmoBuró se paga solo en la primera renta."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">RV</div>
+          <div class="test-info"><div class="name">Roberto Vázquez</div><div class="role">Asesor · Coldwell Banker</div></div>
+        </div>
+      </div>
+      <div class="test-card">
+        <div class="test-stars">★★★★★</div>
+        <p class="test-quote">"Llevo 12 años en bienes raíces. Esta herramienta cambió cómo opero. Profesionaliza al cliente y al asesor desde el primer contacto."</p>
+        <div class="test-author">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#ec4899,#f43f5e)">MD</div>
+          <div class="test-info"><div class="name">Mariana Domínguez</div><div class="role">Broker · Sotheby's</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-eyebrow">Preguntas frecuentes</span>
+      <h2>Resolvemos tus dudas</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item"><button class="faq-q">¿Cuánto tarda el Multireporte Inquilino?<span></span></button><div class="faq-a"><p>El Multireporte se entrega en 1 día hábil después de que el inquilino suba toda la documentación requerida. La mayoría de nuestros reportes están listos en menos de 24 horas.</p></div></div>
+      <div class="faq-item"><button class="faq-q">¿Qué cubre exactamente la Multiprotección Premium?</button><div class="faq-a"><p>Incluye contrato profesional, convenio de justicia alternativa, intervención legal antes del juicio, ejecución judicial sin costo extra, cobertura del 100% de honorarios legales y servicio de cobranza. Cubre rentas de hasta $100,000 MXN.</p></div></div>
+      <div class="faq-item"><button class="faq-q">¿Hay mensualidades o contratos forzosos?</button><div class="faq-a"><p>No. Pagas únicamente por cada solicitud o póliza que generes. Sin cuotas mensuales, sin permanencia obligatoria. Solo pagas cuando lo usas.</p></div></div>
+      <div class="faq-item"><button class="faq-q">¿Funciona en todo México?</button><div class="faq-a"><p>Sí. Operamos en toda la República Mexicana, incluyendo CDMX, Guadalajara, Monterrey, Querétaro, Puebla, Mérida y todas las principales ciudades del país.</p></div></div>
+      <div class="faq-item"><button class="faq-q">¿Quién investiga al inquilino?</button><div class="faq-a"><p>Combinamos algoritmos de IA con un equipo de analistas certificados. Verificamos en más de 40 bases de datos: SAT, INE, buró de crédito, antecedentes legales nacionales y listas negras internacionales.</p></div></div>
+      <div class="faq-item"><button class="faq-q">¿El inquilino tiene que registrarse?</button><div class="faq-a"><p>No. El inquilino solo recibe una liga personalizada para subir sus documentos. Todo el proceso es 100% digital, sin descargas ni registros complicados.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="container cta-inner">
+    <h2>Empieza a rentar con certeza hoy mismo</h2>
+    <p>Crea tu cuenta gratis. Sin tarjeta de crédito. Sin compromiso.</p>
+    <div class="cta-buttons">
+      <a href="app.html" class="btn btn-primary btn-lg">Crear cuenta gratis →</a>
+      <button class="btn btn-secondary btn-lg" data-open="demo">Agendar demo</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo"><span class="logo-mark">I</span><span>InmoBuró</span></a>
+        <p>La plataforma definitiva para profesionalizar el arrendamiento inmobiliario en México. Tecnología, respaldo legal y certeza en cada operación.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Soluciones</h5>
+        <ul>
+          <li><a href="#soluciones">Multireporte Inquilino</a></li>
+          <li><a href="#soluciones">Multiprotección</a></li>
+          <li><a href="#soluciones">Multiprotección Premium</a></li>
+          <li><a href="app.html">Panel inmobiliarias</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Recursos</h5>
+        <ul>
+          <li><a href="#como-funciona">Cómo funciona</a></li>
+          <li><a href="#precios">Precios</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#testimonios">Casos de éxito</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contacto</h5>
+        <ul>
+          <li><a href="mailto:ventas@inmoburo.com.mx">ventas@inmoburo.com.mx</a></li>
+          <li><a href="tel:+523333324037">+52 333 332 4037</a></li>
+          <li><a href="#">Centro de ayuda</a></li>
+          <li><a href="#">Estatus del sistema</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 InmoBuró · <a href="#" style="color:rgba(255,255,255,.7)">Privacidad</a> · <a href="#" style="color:rgba(255,255,255,.7)">Términos</a> · ES | EN</div>
+      <div class="social-links">
+        <a href="#" aria-label="LinkedIn">in</a>
+        <a href="#" aria-label="Facebook">f</a>
+        <a href="#" aria-label="Instagram">ig</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal">
+    <button class="modal-close" data-close>×</button>
+    <h2>Iniciar sesión</h2>
+    <p class="muted">Accede a tu panel InmoBuró</p>
+    <form id="login-form">
+      <div class="field"><label>Correo electrónico</label><input type="email" name="email" required placeholder="tucorreo@empresa.com"></div>
+      <div class="field"><label>Contraseña</label><input type="password" name="password" required placeholder="••••••••"></div>
+      <button class="btn btn-primary btn-block btn-lg" type="submit">Entrar al panel</button>
+    </form>
+    <div class="modal-footer">¿Aún no tienes cuenta? <a href="app.html">Crear cuenta gratis</a></div>
+  </div>
+</div>
+
+<!-- DEMO MODAL -->
+<div class="modal-overlay" id="modal-demo">
+  <div class="modal">
+    <button class="modal-close" data-close>×</button>
+    <h2>Agenda tu demo</h2>
+    <p class="muted">Un especialista te mostrará InmoBuró en 20 min.</p>
+    <form id="demo-form">
+      <div class="field"><label>Nombre completo</label><input type="text" name="name" required></div>
+      <div class="field"><label>Correo</label><input type="email" name="email" required></div>
+      <div class="field"><label>Teléfono / WhatsApp</label><input type="tel" name="phone" required></div>
+      <div class="field"><label>Empresa</label><input type="text" name="company"></div>
+      <button class="btn btn-primary btn-block btn-lg" type="submit">Agendar demo →</button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Modal handling
+  document.querySelectorAll('[data-open]').forEach(b => {
+    b.addEventListener('click', () => {
+      const m = document.getElementById('modal-' + b.dataset.open);
+      if (m) m.classList.add('open');
+    });
+  });
+  document.querySelectorAll('[data-close]').forEach(b => {
+    b.addEventListener('click', () => b.closest('.modal-overlay').classList.remove('open'));
+  });
+  document.querySelectorAll('.modal-overlay').forEach(o => {
+    o.addEventListener('click', e => { if (e.target === o) o.classList.remove('open'); });
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.addEventListener('click', () => q.closest('.faq-item').classList.toggle('open'));
+  });
+
+  // Login submit → save session and redirect to app
+  document.getElementById('login-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const f = new FormData(e.target);
+    const session = { email: f.get('email'), name: f.get('email').split('@')[0], tenant: 'default' };
+    localStorage.setItem('mb_session', JSON.stringify(session));
+    window.location.href = 'app.html';
+  });
+
+  document.getElementById('demo-form').addEventListener('submit', e => {
+    e.preventDefault();
+    alert('¡Gracias! Te contactaremos en menos de 24 hrs para agendar tu demo.');
+    e.target.closest('.modal-overlay').classList.remove('open');
+    e.target.reset();
+  });
+
+  // Smooth nav highlight
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const t = document.querySelector(a.getAttribute('href'));
+      if (t) { e.preventDefault(); t.scrollIntoView({behavior:'smooth', block:'start'}); }
+    });
+  });
+</script>
+
+</body>
+</html>
