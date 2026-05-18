@@ -12,3 +12,5 @@ uploads/
 .idea
 .vscode
 prisma/migrations/
+
+.vercel

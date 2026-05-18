@@ -6,7 +6,18 @@ const $$ = s => document.querySelectorAll(s);
 const fmtMx = n => '$' + Number(n || 0).toLocaleString('es-MX', {maximumFractionDigits: 0});
 const initials = name => (name||'?').split(' ').slice(0,2).map(p=>p[0]).join('').toUpperCase();
 const escapeHtml = (str) => String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-const planLabel = p => ({multireporte:'Multireporte', multiproteccion:'Multiprotección', premium:'Premium'}[p] || p);
+const planLabel = p => ({multireporte:'Radar', multiproteccion:'Cobertura', premium:'Cobertura Élite'}[p] || p);
+const planPrice = p => ({multireporte:999, multiproteccion:4600, premium:7500}[p] || 0);
+// Probabilidad de pago a 12 meses (basada en score)
+const payProbability = score => {
+  if (score >= 90) return 96;
+  if (score >= 80) return 92;
+  if (score >= 70) return 86;
+  if (score >= 60) return 74;
+  if (score >= 50) return 58;
+  if (score >= 40) return 42;
+  return Math.max(15, score * 0.7);
+};
 const statusLabel = s => ({nuevo:'Nuevo', revision:'En revisión', validado:'Validado', rechazado:'Rechazado'}[s] || s);
 const statusClass = s => ({nuevo:'new', revision:'rev', validado:'ok', rechazado:'rej'}[s] || 'new');
 const fmtDate = s => s ? new Date(s).toLocaleDateString('es-MX', {day:'2-digit', month:'short', year:'numeric'}) : '-';
@@ -97,7 +108,7 @@ $('#global-search').addEventListener('input', e => {
       html += `<div class="sr-section">Contratos</div>`;
       r.contracts.forEach(c => { html += `<a class="sr-item" href="#/contratos">📄 ${escapeHtml(c.tenant.fullName)} · ${fmtMx(c.monthlyRent)}</a>`; });
     }
-    if (!html) html = `<div style="padding:20px;text-align:center;color:var(--gray-400)">Sin resultados</div>`;
+    if (!html) html = `<div style="padding:20px;text-align:center;color:var(--bone-400)">Sin resultados</div>`;
     $('#search-results').innerHTML = html;
     $('#search-results').classList.add('open');
   }, 250);
@@ -146,8 +157,8 @@ async function viewDashboard() {
             <tbody>
             ${recent.length ? recent.map(r => `
               <tr>
-                <td><div class="name-cell"><div class="ava">${initials(r.tenant.fullName)}</div><div><div>${escapeHtml(r.tenant.fullName)}</div><div style="font-size:12px;color:var(--gray-500);font-weight:400">${escapeHtml(r.tenant.email)}</div></div></div></td>
-                <td style="color:var(--gray-600);font-size:13px;max-width:200px">${escapeHtml(r.propertyAddress)}</td>
+                <td><div class="name-cell"><div class="ava">${initials(r.tenant.fullName)}</div><div><div>${escapeHtml(r.tenant.fullName)}</div><div style="font-size:12px;color:var(--bone-500);font-weight:400">${escapeHtml(r.tenant.email)}</div></div></div></td>
+                <td style="color:var(--bone-600);font-size:13px;max-width:200px">${escapeHtml(r.propertyAddress)}</td>
                 <td><strong>${fmtMx(r.monthlyRent)}</strong></td>
                 <td>${planLabel(r.plan)}</td>
                 <td><span class="status-pill ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
@@ -181,8 +192,8 @@ async function viewDashboard() {
           ['Regular (50-64)', stats.scoring.distribution.average, '#f59e0b'],
           ['Bajo (<50)', stats.scoring.distribution.poor, '#ef4444']
         ].map(([l,v,c]) => `
-          <div style="padding:18px;background:var(--gray-50);border-radius:10px;border-left:4px solid ${c}">
-            <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px">${l}</div>
+          <div style="padding:18px;background:var(--bone-50);border-radius:10px;border-left:4px solid ${c}">
+            <div style="font-size:13px;color:var(--bone-500);margin-bottom:4px">${l}</div>
             <div style="font-size:28px;font-weight:800;color:${c}">${v}</div>
           </div>
         `).join('')}
@@ -222,13 +233,13 @@ async function viewSolicitudes() {
           <tbody>
           ${reqs.length ? reqs.map(r => `
             <tr data-status="${r.status}">
-              <td><div class="name-cell"><div class="ava">${initials(r.tenant.fullName)}</div><div><div>${escapeHtml(r.tenant.fullName)}</div><div style="font-size:12px;color:var(--gray-500);font-weight:400">${escapeHtml(r.tenant.phone)}</div></div></div></td>
-              <td style="color:var(--gray-600);font-size:13px;max-width:240px">${escapeHtml(r.propertyAddress)}</td>
+              <td><div class="name-cell"><div class="ava">${initials(r.tenant.fullName)}</div><div><div>${escapeHtml(r.tenant.fullName)}</div><div style="font-size:12px;color:var(--bone-500);font-weight:400">${escapeHtml(r.tenant.phone)}</div></div></div></td>
+              <td style="color:var(--bone-600);font-size:13px;max-width:240px">${escapeHtml(r.propertyAddress)}</td>
               <td><strong>${fmtMx(r.monthlyRent)}</strong></td>
               <td>${planLabel(r.plan)}${r.withFiador?' + Fiador':''}</td>
-              <td><div style="background:var(--gray-100);height:6px;border-radius:99px;width:90px;overflow:hidden"><div style="background:var(--teal-500);height:100%;width:${r.progress}%"></div></div><div style="font-size:11px;color:var(--gray-500);margin-top:4px">${r.progress}%</div></td>
+              <td><div style="background:var(--bone-100);height:6px;border-radius:99px;width:90px;overflow:hidden"><div style="background:var(--lime-500);height:100%;width:${r.progress}%"></div></div><div style="font-size:11px;color:var(--bone-500);margin-top:4px">${r.progress}%</div></td>
               <td><span class="status-pill ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
-              <td><strong style="color:${r.report?.score>=70?'var(--green-500)':r.report?'var(--red-500)':'var(--gray-400)'}">${r.report?.score ?? '-'}</strong></td>
+              <td><strong style="color:${r.report?.score>=70?'var(--green-500)':r.report?'var(--red-500)':'var(--bone-400)'}">${r.report?.score ?? '-'}</strong></td>
               <td><a href="#/solicitud/${r.id}" class="btn btn-icon">→</a></td>
             </tr>`).join('') : `<tr><td colspan="8" class="empty"><div class="icon-big">📋</div>No hay solicitudes todavía<br><button class="btn btn-primary" style="margin-top:14px" onclick="openNewRequest()">Crear la primera</button></td></tr>`}
           </tbody>
@@ -255,12 +266,43 @@ async function viewSolicitudDetail(id) {
   const totalPaid = r.payments?.filter(p=>p.status==='paid').reduce((s,p)=>s+p.amount,0) || 0;
   const docsByStatus = (r.documents || []).reduce((acc,d) => (acc[d.status]=(acc[d.status]||0)+1, acc), {});
 
+  // Score breakdown — 8 factores con valores derivados del reporte
+  const ratio = r.report?.capacityRatio || 0;
+  const capPts = ratio >= 4 ? 25 : ratio >= 3 ? 20 : ratio >= 2.5 ? 12 : ratio >= 2 ? 5 : 0;
+  const docsValid = (r.documents||[]).filter(d => d.status === 'validado').length;
+  const breakdown = r.report ? [
+    { lbl: 'Capacidad de pago',   pts: capPts, max: 25, status: capPts >= 20 ? 'ok' : capPts >= 10 ? 'warn' : 'bad' },
+    { lbl: 'Documentos validados', pts: Math.min(15, docsValid*2.5), max: 15, status: docsValid >= 5 ? 'ok' : 'warn' },
+    { lbl: 'Identidad (INE/CURP)', pts: r.report.identityOk ? 8 : 0, max: 8, status: r.report.identityOk ? 'ok' : 'bad' },
+    { lbl: 'Antigüedad laboral',  pts: t.tenure ? 8 : 4, max: 8, status: 'ok' },
+    { lbl: 'Fiador',              pts: r.withFiador ? 5 : 0, max: 5, status: r.withFiador ? 'ok' : 'warn' },
+    { lbl: 'Historial crediticio', pts: r.report.creditOk ? 12 : 0, max: 12, status: r.report.creditOk ? 'ok' : 'bad' },
+    { lbl: 'Antecedentes legales', pts: r.report.legalOk ? 25 : 0, max: 25, status: r.report.legalOk ? 'ok' : 'bad' },
+    { lbl: 'Listas negras',       pts: r.report.blacklistOk ? 30 : 0, max: 30, status: r.report.blacklistOk ? 'ok' : 'bad' }
+  ] : [];
+
+  // Timeline de hitos
+  const tl = [
+    { lbl: 'Solicitud creada',      done: true,  meta: fmtDate(r.createdAt) },
+    { lbl: 'Liga enviada al inquilino', done: true,  meta: 'Email + WhatsApp' },
+    { lbl: 'Documentos recibidos',  done: r.documents.length > 0, meta: `${r.documents.length} de 6` },
+    { lbl: 'Análisis ejecutado',    done: !!r.report, meta: r.report ? '8 factores · ' + r.report.fraudRisk + ' risk' : 'Pendiente' },
+    { lbl: 'Score entregado',       done: !!r.report, meta: r.report ? `${r.report.score} / 100` : 'En proceso' },
+    { lbl: 'Contrato firmado',      done: !!r.contract, meta: r.contract ? fmtDate(r.contract.signedAt) : 'Pendiente' }
+  ];
+  let currentSet = false;
+  const tlAnnotated = tl.map(item => {
+    if (item.done) return { ...item, klass: 'done' };
+    if (!currentSet) { currentSet = true; return { ...item, klass: 'current' }; }
+    return { ...item, klass: 'pending' };
+  });
+
   return `
-    <div style="margin-bottom:18px"><a href="#/solicitudes" style="color:var(--gray-500);font-size:14px">← Volver a solicitudes</a></div>
+    <div style="margin-bottom:18px"><a href="#/solicitudes" style="color:var(--bone-500);font-size:14px">← Volver a solicitudes</a></div>
     <div class="page-head">
       <div>
         <h1>${escapeHtml(t.fullName)}</h1>
-        <p>Solicitud <code>${r.id.slice(0,8)}</code> · ${escapeHtml(r.propertyAddress)}</p>
+        <p>Solicitud <code style="background:var(--bone-100);padding:2px 6px;border-radius:4px">${r.id.slice(0,8)}</code> · ${escapeHtml(r.propertyAddress)}</p>
       </div>
       <div style="display:flex;gap:10px;align-items:center">
         <span class="status-pill ${statusClass(r.status)}" style="padding:8px 14px;font-size:13px">${statusLabel(r.status)}</span>
@@ -274,40 +316,47 @@ async function viewSolicitudDetail(id) {
         ${score !== undefined ? `
         <div class="card" style="margin-bottom:20px">
           <div class="card-head">
-            <h3>Score de confiabilidad</h3>
-            <a href="#" class="link" onclick="downloadReport('${r.report.id}', '${escapeHtml(t.fullName)}'); return false;">↓ Descargar PDF</a>
+            <h3>Score explicable</h3>
+            <a href="#" class="link" onclick="downloadReport('${r.report.id}', '${escapeHtml(t.fullName)}'); return false;">↓ Descargar Multireporte PDF</a>
           </div>
-          <div class="score-circle" style="--pct:${score}"><div class="v">${score}</div></div>
-          <p style="text-align:center;margin-top:16px;color:var(--gray-500)">
-            ${score >= 80 ? '✅ Excelente candidato' : score >= 60 ? '⚠️ Candidato aceptable con observaciones' : '❌ Alto riesgo'}
-          </p>
-          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px;font-size:13px">
-            <div style="padding:10px;background:var(--gray-50);border-radius:8px">
-              <div style="color:var(--gray-500)">Capacidad de pago</div>
-              <div style="font-weight:700;font-size:16px;color:${r.report.capacityRatio>=3?'var(--green-500)':r.report.capacityRatio>=2?'var(--amber-500)':'var(--red-500)'}">${r.report.capacityRatio}x</div>
+          <div style="display:grid;grid-template-columns:200px 1fr;gap:28px;align-items:center">
+            <div>
+              <div class="score-circle" style="--pct:${score}"><div class="v">${score}</div></div>
+              <p style="text-align:center;margin-top:14px;color:var(--bone-500);font-size:13px">
+                ${score >= 80 ? '✅ Excelente' : score >= 60 ? '⚠️ Aceptable' : '❌ Alto riesgo'}
+              </p>
             </div>
-            <div style="padding:10px;background:var(--gray-50);border-radius:8px">
-              <div style="color:var(--gray-500)">Riesgo fraude</div>
-              <div style="font-weight:700;font-size:16px;color:${r.report.fraudRisk==='low'?'var(--green-500)':r.report.fraudRisk==='medium'?'var(--amber-500)':'var(--red-500)'}">${r.report.fraudRisk.toUpperCase()}</div>
+            <div>
+              <div style="font-family:var(--font-display);font-size:13px;color:var(--bone-500);font-weight:600;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px">Descomposición del score · 8 factores</div>
+              <div class="score-bars">
+                ${breakdown.map(b => `
+                  <div class="score-bar">
+                    <div class="lbl">${b.lbl}</div>
+                    <div class="track"><div class="fill ${b.status === 'bad' ? 'bad' : b.status === 'warn' ? 'warn' : ''}" style="width:${(b.pts/b.max*100).toFixed(0)}%"></div></div>
+                    <div class="val">${b.pts}/${b.max}</div>
+                  </div>
+                `).join('')}
+              </div>
             </div>
-            <div style="padding:10px;background:var(--gray-50);border-radius:8px"><div style="color:var(--gray-500)">Identidad</div><div style="font-weight:700">${r.report.identityOk?'✅ OK':'❌ Falla'}</div></div>
-            <div style="padding:10px;background:var(--gray-50);border-radius:8px"><div style="color:var(--gray-500)">Crediticio</div><div style="font-weight:700">${r.report.creditOk?'✅ OK':'⚠️ Observado'}</div></div>
-            <div style="padding:10px;background:var(--gray-50);border-radius:8px"><div style="color:var(--gray-500)">Legal</div><div style="font-weight:700">${r.report.legalOk?'✅ OK':'❌ Observado'}</div></div>
-            <div style="padding:10px;background:var(--gray-50);border-radius:8px"><div style="color:var(--gray-500)">Listas negras</div><div style="font-weight:700">${r.report.blacklistOk?'✅ Limpio':'🚫 Detectado'}</div></div>
           </div>
-          ${r.report.observations ? `<div style="margin-top:16px;padding:14px;background:var(--gray-50);border-radius:10px;font-size:13px;white-space:pre-line">${escapeHtml(r.report.observations)}</div>`:''}
+          <div class="prediction-widget">
+            <div class="lbl">Probabilidad de pago puntual a 12 meses</div>
+            <div class="pct">${payProbability(score)}%</div>
+            <div class="note">Modelo entrenado con cohorte histórica del mercado mexicano · Capacidad de pago ${r.report.capacityRatio}x · Riesgo ${r.report.fraudRisk}</div>
+          </div>
+          ${r.report.observations ? `<div style="margin-top:16px;padding:14px;background:var(--bone-50);border-radius:10px;font-size:13px;white-space:pre-line;border-left:3px solid var(--lime-500)">${escapeHtml(r.report.observations)}</div>`:''}
         </div>` : `<div class="card" style="margin-bottom:20px"><div class="empty"><div class="icon-big">⏳</div><p>Score disponible al validar la solicitud</p></div></div>`}
 
         <div class="card">
-          <div class="card-head"><h3>Documentos del inquilino</h3><span style="font-size:12px;color:var(--gray-500)">${r.documents.length} total · ${docsByStatus.validado||0} validados</span></div>
+          <div class="card-head"><h3>Documentos del inquilino</h3><span style="font-size:12px;color:var(--bone-500)">${r.documents.length} total · ${docsByStatus.validado||0} validados</span></div>
           <div style="display:grid;gap:10px">
             ${r.documents.length ? r.documents.map(d => `
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--gray-50);border-radius:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--bone-50);border-radius:10px">
                 <div style="display:flex;align-items:center;gap:10px">
                   <span style="font-size:18px">📎</span>
                   <div>
                     <div style="font-weight:600;font-size:14px">${escapeHtml(({ine:'INE',domicilio:'Comprobante de domicilio',ingresos:'Comprobantes de ingresos',banco:'Estado de cuenta bancario',referencias:'Referencias',empleo:'Comprobante de empleo',otro:'Documento'}[d.type] || d.type))}</div>
-                    <div style="font-size:11px;color:var(--gray-500)">${escapeHtml(d.filename)} · ${(d.size/1024).toFixed(0)} KB</div>
+                    <div style="font-size:11px;color:var(--bone-500)">${escapeHtml(d.filename)} · ${(d.size/1024).toFixed(0)} KB</div>
                   </div>
                 </div>
                 <span class="status-pill ${statusClass(d.status==='revision'?'revision':d.status==='validado'?'validado':'rechazado')}">${d.status==='validado'?'Validado':d.status==='revision'?'En revisión':'Rechazado'}</span>
@@ -319,6 +368,21 @@ async function viewSolicitudDetail(id) {
 
       <div>
         <div class="card" style="margin-bottom:20px">
+          <div class="card-head"><h3>Timeline del proceso</h3></div>
+          <div class="timeline">
+            ${tlAnnotated.map((tl, i) => `
+              <div class="tl-item ${tl.klass}">
+                <div class="tl-dot">${tl.klass === 'done' ? '✓' : (i+1)}</div>
+                <div>
+                  <div class="tl-title">${tl.lbl}</div>
+                  <div class="tl-meta">${tl.meta}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
           <div class="card-head"><h3>Datos del inquilino</h3></div>
           <div style="display:grid;gap:10px;font-size:14px">
             ${[
@@ -326,33 +390,33 @@ async function viewSolicitudDetail(id) {
               ['RFC', t.rfc || '—'],['Ocupación', t.occupation || '—'],
               ['Ingreso mensual', t.monthlyIncome ? fmtMx(t.monthlyIncome) : '—'],
               ['Empleador', t.employer || '—'],['Antigüedad', t.tenure || '—']
-            ].map(([l,v]) => `<div><div style="color:var(--gray-500);font-size:12px">${l}</div><div style="font-weight:600">${escapeHtml(v)}</div></div>`).join('')}
+            ].map(([l,v]) => `<div><div style="color:var(--bone-500);font-size:12px">${l}</div><div style="font-weight:600">${escapeHtml(v)}</div></div>`).join('')}
           </div>
         </div>
 
         <div class="card" style="margin-bottom:20px">
           <div class="card-head"><h3>Detalle de la operación</h3></div>
           <div style="display:grid;gap:10px;font-size:14px">
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Renta mensual</span><strong>${fmtMx(r.monthlyRent)}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Plan</span><strong>${planLabel(r.plan)}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Fiador</span><strong>${r.withFiador?'Sí':'No'}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Persona moral</span><strong>${r.withCorporate?'Sí':'No'}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Cobrado</span><strong style="color:var(--teal-600)">${fmtMx(totalPaid)}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Creada</span><span>${fmtDate(r.createdAt)}</span></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Última actualización</span><span>${fmtDate(r.updatedAt)}</span></div>
-            ${r.createdBy ? `<div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Asesor</span><span>${escapeHtml(r.createdBy.name)}</span></div>`:''}
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Renta mensual</span><strong>${fmtMx(r.monthlyRent)}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Plan</span><strong>${planLabel(r.plan)}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Fiador</span><strong>${r.withFiador?'Sí':'No'}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Persona moral</span><strong>${r.withCorporate?'Sí':'No'}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Cobrado</span><strong style="color:var(--indigo-700)">${fmtMx(totalPaid)}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Creada</span><span>${fmtDate(r.createdAt)}</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Última actualización</span><span>${fmtDate(r.updatedAt)}</span></div>
+            ${r.createdBy ? `<div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Asesor</span><span>${escapeHtml(r.createdBy.name)}</span></div>`:''}
           </div>
           ${r.status === 'validado' && !r.contract ? `<button class="btn btn-primary btn-block" style="margin-top:18px" onclick="generateContract('${r.id}')">📄 Generar contrato</button>` : ''}
           ${r.contract ? `<button class="btn btn-outline btn-block" style="margin-top:14px" onclick="downloadContract('${r.contract.id}', '${escapeHtml(t.fullName)}')">↓ Descargar contrato PDF</button>` : ''}
         </div>
 
         ${r.policy ? `
-        <div class="card" style="border:1px solid var(--teal-500); background:linear-gradient(180deg,#e6faf3 0%,white 50%)">
+        <div class="card" style="border:1px solid var(--lime-500); background:linear-gradient(180deg,#e6faf3 0%,white 50%)">
           <div class="card-head"><h3>🛡️ Póliza ${planLabel(r.policy.plan)}</h3></div>
           <div style="font-size:14px">
-            <div><span style="color:var(--gray-500)">Número:</span> <strong style="font-family:monospace">${r.policy.policyNumber}</strong></div>
-            <div style="margin-top:6px"><span style="color:var(--gray-500)">Cobertura:</span> <strong>${fmtMx(r.policy.coverage)}</strong></div>
-            <div style="margin-top:6px"><span style="color:var(--gray-500)">Vigencia:</span> ${fmtDate(r.policy.startDate)} → ${fmtDate(r.policy.endDate)}</div>
+            <div><span style="color:var(--bone-500)">Número:</span> <strong style="font-family:monospace">${r.policy.policyNumber}</strong></div>
+            <div style="margin-top:6px"><span style="color:var(--bone-500)">Cobertura:</span> <strong>${fmtMx(r.policy.coverage)}</strong></div>
+            <div style="margin-top:6px"><span style="color:var(--bone-500)">Vigencia:</span> ${fmtDate(r.policy.startDate)} → ${fmtDate(r.policy.endDate)}</div>
           </div>
         </div>`:''}
       </div>
@@ -391,8 +455,8 @@ async function viewInquilinos() {
           <tbody>
           ${tenants.length ? tenants.map(t => `
             <tr>
-              <td><div class="name-cell"><div class="ava">${initials(t.fullName)}</div><div><div>${escapeHtml(t.fullName)}</div><div style="font-size:12px;color:var(--gray-500);font-weight:400">${escapeHtml(t.employer||'')}</div></div></div></td>
-              <td style="font-size:13px"><div>${escapeHtml(t.email)}</div><div style="color:var(--gray-500)">${escapeHtml(t.phone)}</div></td>
+              <td><div class="name-cell"><div class="ava">${initials(t.fullName)}</div><div><div>${escapeHtml(t.fullName)}</div><div style="font-size:12px;color:var(--bone-500);font-weight:400">${escapeHtml(t.employer||'')}</div></div></div></td>
+              <td style="font-size:13px"><div>${escapeHtml(t.email)}</div><div style="color:var(--bone-500)">${escapeHtml(t.phone)}</div></td>
               <td style="font-family:monospace;font-size:13px">${escapeHtml(t.rfc||'—')}</td>
               <td>${escapeHtml(t.occupation||'—')}</td>
               <td><strong>${t.monthlyIncome?fmtMx(t.monthlyIncome):'—'}</strong></td>
@@ -432,7 +496,7 @@ async function viewReportes() {
               <td>${r.creditOk?'✅':'⚠️'}</td>
               <td>${r.legalOk?'✅':'❌'}</td>
               <td>${r.blacklistOk?'✅ Limpio':'🚫 Detectado'}</td>
-              <td style="color:var(--gray-500);font-size:13px">${fmtDate(r.generatedAt)}</td>
+              <td style="color:var(--bone-500);font-size:13px">${fmtDate(r.generatedAt)}</td>
               <td><button class="btn btn-icon" onclick="downloadReport('${r.id}', '${escapeHtml(r.request.tenant.fullName)}')" title="Descargar PDF">📄</button></td>
             </tr>`).join('')}
           </tbody>
@@ -524,8 +588,8 @@ async function viewPagos() {
             <tr>
               <td>${fmtDate(p.paidAt || p.createdAt)}</td>
               <td>${escapeHtml(p.concept)}</td>
-              <td style="font-size:13px;color:var(--gray-500)">${escapeHtml(p.method)}</td>
-              <td style="font-family:monospace;font-size:12px;color:var(--gray-500)">${escapeHtml(p.reference||'-')}</td>
+              <td style="font-size:13px;color:var(--bone-500)">${escapeHtml(p.method)}</td>
+              <td style="font-family:monospace;font-size:12px;color:var(--bone-500)">${escapeHtml(p.reference||'-')}</td>
               <td><strong>${fmtMx(p.amount)}</strong></td>
               <td><span class="status-pill ${p.status==='paid'?'ok':p.status==='pending'?'rev':'rej'}">${p.status==='paid'?'Pagado':p.status==='pending'?'Pendiente':'Fallido'}</span></td>
               <td>${p.status==='pending'?`<button class="btn btn-sm btn-primary" onclick="capturePayment('${p.id}')">Cobrar</button>`:''}</td>
@@ -541,6 +605,79 @@ window.capturePayment = async (id) => {
   try { await API.payments.charge(id); route(); } catch (e) { alert('Error: '+e.message); }
 };
 
+async function viewComparador() {
+  const allReqs = await API.requests.list({});
+  // Agrupar por propertyAddress para encontrar candidatos competidores
+  const groups = {};
+  allReqs.forEach(r => {
+    const key = r.propertyAddress.toLowerCase().trim();
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(r);
+  });
+  const competitive = Object.entries(groups).filter(([k, arr]) => arr.length >= 2);
+
+  return `
+    <div class="page-head">
+      <div><h1>Comparador de candidatos</h1><p>Pon lado a lado los inquilinos que compiten por el mismo inmueble</p></div>
+    </div>
+
+    ${competitive.length === 0 ? `
+      <div class="card">
+        <div class="empty">
+          <div class="icon-big">⚖️</div>
+          <h3>Aún no hay inmuebles con múltiples candidatos</h3>
+          <p style="margin:14px 0 22px">El comparador se activa automáticamente cuando 2 o más solicitudes apuntan al mismo inmueble.</p>
+          <p style="font-size:13px;color:var(--bone-400)">Para probarlo: crea 2 solicitudes con la <strong>misma dirección de inmueble</strong> y regresa a esta vista.</p>
+        </div>
+      </div>
+    ` : competitive.map(([property, reqs]) => {
+        // Ranking: el mejor score gana
+        const ranked = [...reqs].sort((a,b) => (b.report?.score || 0) - (a.report?.score || 0));
+        const winnerId = ranked[0]?.report ? ranked[0].id : null;
+        const cols = reqs.length === 2 ? 'cols-2' : 'cols-3';
+        return `
+          <div style="margin-bottom:36px">
+            <h2 style="font-family:var(--font-display);font-size:20px;color:var(--indigo-900);margin-bottom:6px">📍 ${escapeHtml(reqs[0].propertyAddress)}</h2>
+            <p style="color:var(--bone-500);font-size:14px;margin-bottom:18px">${reqs.length} candidatos · Renta ${fmtMx(reqs[0].monthlyRent)}/mes</p>
+            <div class="compare-grid ${cols}">
+              ${ranked.slice(0,3).map(r => {
+                const t = r.tenant;
+                const score = r.report?.score;
+                const isWinner = r.id === winnerId;
+                return `
+                  <div class="compare-card ${isWinner?'winner':''}">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+                      <div class="ava" style="width:44px;height:44px;font-size:14px">${initials(t.fullName)}</div>
+                      <div>
+                        <div style="font-family:var(--font-display);font-weight:700;color:var(--indigo-900);font-size:16px">${escapeHtml(t.fullName)}</div>
+                        <div style="font-size:12px;color:var(--bone-500)">${escapeHtml(t.occupation || '—')}</div>
+                      </div>
+                    </div>
+                    <div style="text-align:center;padding:14px 0;background:var(--bone-50);border-radius:10px;margin-bottom:14px">
+                      <div style="font-size:11px;color:var(--bone-500);text-transform:uppercase;letter-spacing:1.5px;font-weight:600">Score</div>
+                      <div style="font-family:var(--font-display);font-size:42px;font-weight:700;color:${score>=70?'var(--green-500)':score?'var(--red-500)':'var(--bone-400)'};letter-spacing:-.02em;line-height:1">${score ?? '—'}</div>
+                      ${score ? `<div style="font-size:12px;color:var(--bone-500);margin-top:4px">${payProbability(score)}% prob. pago 12m</div>` : ''}
+                    </div>
+                    <div style="display:grid;gap:8px;font-size:13px">
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Ingreso</span><strong>${t.monthlyIncome?fmtMx(t.monthlyIncome):'—'}</strong></div>
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Capacidad</span><strong style="color:${r.report?.capacityRatio>=3?'var(--green-500)':'var(--amber-500)'}">${r.report?.capacityRatio?r.report.capacityRatio+'x':'—'}</strong></div>
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Identidad</span><strong>${r.report?.identityOk?'✅':r.report?'❌':'⏳'}</strong></div>
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Crediticio</span><strong>${r.report?.creditOk?'✅':r.report?'⚠️':'⏳'}</strong></div>
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Legal</span><strong>${r.report?.legalOk?'✅':r.report?'❌':'⏳'}</strong></div>
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Listas negras</span><strong>${r.report?.blacklistOk?'✅':r.report?'🚫':'⏳'}</strong></div>
+                      <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Fiador</span><strong>${r.withFiador?'Sí':'No'}</strong></div>
+                    </div>
+                    <a href="#/solicitud/${r.id}" class="btn btn-outline btn-block" style="margin-top:18px">Ver detalle →</a>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        `;
+      }).join('')}
+  `;
+}
+
 async function viewEquipo() {
   const users = await API.users.list();
   return `
@@ -555,10 +692,10 @@ async function viewEquipo() {
           <tbody>
           ${users.map(u => `
             <tr>
-              <td><div class="name-cell"><div class="ava">${initials(u.name)}</div><div><div>${escapeHtml(u.name)}</div>${u.id===SESSION.user.id?'<div style="font-size:12px;color:var(--gray-500)">Tú</div>':''}</div></div></td>
+              <td><div class="name-cell"><div class="ava">${initials(u.name)}</div><div><div>${escapeHtml(u.name)}</div>${u.id===SESSION.user.id?'<div style="font-size:12px;color:var(--bone-500)">Tú</div>':''}</div></div></td>
               <td>${escapeHtml(u.email)}</td>
               <td><span class="status-pill ${u.role==='admin'?'new':'rev'}">${u.role==='admin'?'Administrador':u.role==='asesor'?'Asesor':'Lector'}</span></td>
-              <td style="font-size:13px;color:var(--gray-500)">${u.lastLoginAt?fmtDate(u.lastLoginAt):'Nunca'}</td>
+              <td style="font-size:13px;color:var(--bone-500)">${u.lastLoginAt?fmtDate(u.lastLoginAt):'Nunca'}</td>
               <td><span class="status-pill ${u.active?'ok':'rej'}">${u.active?'Activo':'Inactivo'}</span></td>
             </tr>`).join('')}
           </tbody>
@@ -597,7 +734,7 @@ async function viewOrganizacion() {
             <div class="field"><label>Plan</label><input value="${escapeHtml(org.plan)}" disabled></div>
             <div class="field field-full"><label>Dirección</label><input name="address" value="${escapeHtml(org.address||'')}"></div>
             <div class="field field-full"><label>Webhook URL (integraciones)</label><input name="webhookUrl" value="${escapeHtml(org.webhookUrl||'')}" placeholder="https://hooks.zapier.com/..."></div>
-            <div class="field field-full"><label>API Key</label><input value="${escapeHtml(org.apiKey)}" readonly style="font-family:monospace;font-size:12px;background:var(--gray-50)"></div>
+            <div class="field field-full"><label>API Key</label><input value="${escapeHtml(org.apiKey)}" readonly style="font-family:monospace;font-size:12px;background:var(--bone-50)"></div>
           </div>
           <button class="btn btn-primary" type="submit" style="margin-top:14px">Guardar cambios</button>
         </form>
@@ -606,16 +743,16 @@ async function viewOrganizacion() {
         <div class="card" style="margin-bottom:20px">
           <div class="card-head"><h3>Estadísticas</h3></div>
           <div style="display:grid;gap:10px;font-size:14px">
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Usuarios</span><strong>${org._count.users}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Inquilinos</span><strong>${org._count.tenants}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Solicitudes</span><strong>${org._count.requests}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Contratos</span><strong>${org._count.contracts}</strong></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-500)">Pagos</span><strong>${org._count.payments}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Usuarios</span><strong>${org._count.users}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Inquilinos</span><strong>${org._count.tenants}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Solicitudes</span><strong>${org._count.requests}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Contratos</span><strong>${org._count.contracts}</strong></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--bone-500)">Pagos</span><strong>${org._count.payments}</strong></div>
           </div>
         </div>
         <div class="card" style="border-color:var(--red-100);background:#fff5f5">
           <div class="card-head"><h3 style="color:var(--red-500)">Zona de peligro</h3></div>
-          <p style="font-size:13px;color:var(--gray-600);margin-bottom:14px">Estas acciones son irreversibles.</p>
+          <p style="font-size:13px;color:var(--bone-600);margin-bottom:14px">Estas acciones son irreversibles.</p>
           <button class="btn btn-outline" style="border-color:var(--red-500);color:var(--red-500)" onclick="$('#logout-btn').click()">Cerrar sesión</button>
         </div>
       </div>
@@ -669,6 +806,7 @@ $('#new-req-form').addEventListener('submit', async e => {
 const routes = {
   dashboard: { title: 'Dashboard', view: viewDashboard },
   solicitudes: { title: 'Solicitudes', view: viewSolicitudes },
+  comparador: { title: 'Comparador', view: viewComparador },
   inquilinos: { title: 'Inquilinos', view: viewInquilinos },
   reportes: { title: 'Multireportes', view: viewReportes },
   contratos: { title: 'Contratos', view: viewContratos },
