@@ -35,7 +35,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       organizationId: org.id,
-      email: 'jp@inmoburo.com.mx',
+      email: 'jp@inmoburo.com',
       passwordHash: adminPass,
       name: 'Juan Pablo Fierro',
       phone: '+52 333 332 4037',
@@ -45,7 +45,7 @@ async function main() {
   const asesor = await prisma.user.create({
     data: {
       organizationId: org.id,
-      email: 'lucia@inmoburo.com.mx',
+      email: 'lucia@inmoburo.com',
       passwordHash: await bcrypt.hash('demo123', 10),
       name: 'Lucía Ramírez',
       phone: '+52 333 111 2222',
@@ -191,8 +191,8 @@ async function main() {
 
   console.log('✅ Seed completo:');
   console.log(`   Organización: ${org.name} (${org.id})`);
-  console.log(`   Admin: jp@inmoburo.com.mx / demo123`);
-  console.log(`   Asesor: lucia@inmoburo.com.mx / demo123`);
+  console.log(`   Admin: jp@inmoburo.com / demo123`);
+  console.log(`   Asesor: lucia@inmoburo.com / demo123`);
   console.log(`   ${tenants.length} inquilinos · ${reqs.length} solicitudes`);
 }
 
