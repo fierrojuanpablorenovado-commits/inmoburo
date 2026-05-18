@@ -69,6 +69,7 @@ window.API = {
   },
   payments: {
     list: () => request('GET', '/payments'),
+    checkout: (id) => request('POST', '/payments/'+id+'/checkout'),
     charge: (id) => request('POST', '/payments/'+id+'/charge')
   },
   activity: {

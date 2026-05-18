@@ -17,16 +17,32 @@ import policiesRouter from './routes/policies.js';
 import paymentsRouter from './routes/payments.js';
 import activityRouter from './routes/activity.js';
 import dashboardRouter from './routes/dashboard.js';
+import { handleStripeWebhook, isStripeEnabled } from './services/payments.js';
+import { isResendEnabled, isWhatsAppEnabled } from './services/notifications.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 4180;
 
 app.use(cors());
+
+// Stripe webhook: necesita raw body antes de express.json
+app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  try {
+    const result = await handleStripeWebhook(req.body, req.headers['stripe-signature']);
+    res.json(result);
+  } catch (e) {
+    console.error('Stripe webhook error:', e.message);
+    res.status(400).json({ error: e.message });
+  }
+});
+
 app.use(express.json({ limit: '5mb' }));
 
-// API
-app.get('/api/health', (req, res) => res.json({ ok: true, app: 'inmoburo', version: '1.0.0', time: new Date().toISOString() }));
+app.get('/api/health', (req, res) => res.json({
+  ok: true, app: 'inmoburo', version: '1.0.0', time: new Date().toISOString(),
+  integrations: { stripe: isStripeEnabled, email: isResendEnabled, whatsapp: isWhatsAppEnabled }
+}));
 app.use('/api/auth', authRouter);
 app.use('/api/organization', organizationsRouter);
 app.use('/api/users', usersRouter);

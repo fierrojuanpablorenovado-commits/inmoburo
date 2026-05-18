@@ -602,7 +602,15 @@ async function viewPagos() {
 }
 window.capturePayment = async (id) => {
   if (!confirm('¿Confirmar cobro?')) return;
-  try { await API.payments.charge(id); route(); } catch (e) { alert('Error: '+e.message); }
+  try {
+    const r = await API.payments.checkout(id);
+    if (r.url) {
+      // Stripe Checkout real → redirige, o mock URL
+      window.location.href = r.url;
+    } else {
+      route();
+    }
+  } catch (e) { alert('Error: ' + e.message); }
 };
 
 async function viewComparador() {
