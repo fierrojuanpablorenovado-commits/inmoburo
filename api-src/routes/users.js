@@ -41,7 +41,7 @@ router.patch('/:id', requireRole('admin'), async (req, res) => {
   if (!u) return res.status(404).json({ error: 'Usuario no encontrado' });
   const updated = await prisma.user.update({
     where: { id: u.id },
-    data: { name: req.body.name, role: req.body.role, phone: req.body.phone, active: req.body.active }
+    data: { name: req.body.name, email: req.body.email || u.email, role: req.body.role, phone: req.body.phone, active: req.body.active }
   });
   res.json({ id: updated.id, name: updated.name, email: updated.email, role: updated.role, active: updated.active });
 });
