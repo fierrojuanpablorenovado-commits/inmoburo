@@ -40,7 +40,7 @@ app.post('/api/webhooks/stripe', express.raw({ type: 'application/json' }), asyn
 app.use(express.json({ limit: '5mb' }));
 
 app.get('/api/health', (req, res) => res.json({
-  ok: true, app: 'solventa', version: '1.0.0', time: new Date().toISOString(),
+  ok: true, app: 'solventaburo', version: '1.0.0', time: new Date().toISOString(),
   integrations: { stripe: isStripeEnabled, email: isResendEnabled, whatsapp: isWhatsAppEnabled }
 }));
 app.use('/api/auth', authRouter);
@@ -76,7 +76,7 @@ app.use((err, req, res, next) => {
 // Sólo escucha en local. En Vercel, el handler está en /api/index.js
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`🚀 Solventa SaaS running on http://localhost:${PORT}`);
+    console.log(`🚀 Solventa Buró SaaS running on http://localhost:${PORT}`);
     console.log(`📊 API:      http://localhost:${PORT}/api`);
     console.log(`🌐 Landing:  http://localhost:${PORT}/`);
     console.log(`💼 App:      http://localhost:${PORT}/app.html`);

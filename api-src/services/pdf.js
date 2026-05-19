@@ -86,7 +86,7 @@ export async function generateReportPDF({ request, tenant, report, organization 
 
   // Footer
   doc.fontSize(8).fillColor('#999').text(
-    `${organization.name} · Generado por Solventa · Este reporte tiene validez de 30 días a partir de su emisión.`,
+    `${organization.name} · Generado por Solventa Buró · Este reporte tiene validez de 30 días a partir de su emisión.`,
     50, doc.page.height - 50, { align: 'center', width: doc.page.width - 100 }
   );
 
@@ -121,7 +121,7 @@ export async function generateContractPDF({ contract, request, tenant, organizat
     ['QUINTA — USO.', 'El inmueble se destinará exclusivamente a casa-habitación. Queda prohibido cualquier uso comercial o subarrendamiento.'],
     ['SEXTA — SERVICIOS.', 'Los servicios de agua, luz, gas, internet y mantenimiento son por cuenta del ARRENDATARIO.'],
     ['SÉPTIMA — CONVENIO DE JUSTICIA ALTERNATIVA.', 'Las partes pactan que en caso de incumplimiento, someterán la controversia al CJA (Centro de Justicia Alternativa) correspondiente, en términos de la Ley de Justicia Alternativa local, reduciendo así los tiempos de resolución a 2-4 meses.'],
-    ['OCTAVA — CESIÓN DE DERECHOS.', `Solventa gestiona la presente operación. El ARRENDADOR acepta los términos de protección contratados según plan: ${request.plan.toUpperCase()}.`]
+    ['OCTAVA — CESIÓN DE DERECHOS.', `Solventa Buró gestiona la presente operación. El ARRENDADOR acepta los términos de protección contratados según plan: ${request.plan.toUpperCase()}.`]
   ];
 
   clauses.forEach(c => {
@@ -145,7 +145,7 @@ export async function generateContractPDF({ contract, request, tenant, organizat
   doc.text(tenant.fullName);
 
   doc.fontSize(8).fillColor('#999').text(
-    `Documento generado digitalmente por Solventa · ${new Date().toLocaleString('es-MX')}`,
+    `Documento generado digitalmente por Solventa Buró · ${new Date().toLocaleString('es-MX')}`,
     60, doc.page.height - 50, { align: 'center', width: doc.page.width - 120 }
   );
 

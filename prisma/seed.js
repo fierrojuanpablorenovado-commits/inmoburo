@@ -35,7 +35,7 @@ async function main() {
   const admin = await prisma.user.create({
     data: {
       organizationId: org.id,
-      email: 'jp@solventa.com',
+      email: 'jp@solventaburo.com',
       passwordHash: adminPass,
       name: 'Juan Pablo Fierro',
       phone: '+52 333 332 4037',
@@ -45,7 +45,7 @@ async function main() {
   const asesor = await prisma.user.create({
     data: {
       organizationId: org.id,
-      email: 'lucia@solventa.com',
+      email: 'lucia@solventaburo.com',
       passwordHash: await bcrypt.hash('demo123', 10),
       name: 'Lucía Ramírez',
       phone: '+52 333 111 2222',
@@ -191,8 +191,8 @@ async function main() {
 
   console.log('✅ Seed completo:');
   console.log(`   Organización: ${org.name} (${org.id})`);
-  console.log(`   Admin: jp@solventa.com / demo123`);
-  console.log(`   Asesor: lucia@solventa.com / demo123`);
+  console.log(`   Admin: jp@solventaburo.com / demo123`);
+  console.log(`   Asesor: lucia@solventaburo.com / demo123`);
   console.log(`   ${tenants.length} inquilinos · ${reqs.length} solicitudes`);
 }
 

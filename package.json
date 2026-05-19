@@ -1,7 +1,7 @@
 {
-  "name": "solventa",
+  "name": "solventaburo",
   "version": "1.0.0",
-  "description": "Solventa — Plataforma de análisis crediticio y de solvencia",
+  "description": "Solventa Buró — Plataforma de análisis crediticio y de solvencia",
   "type": "module",
   "scripts": {
     "dev": "node api-src/server.js",

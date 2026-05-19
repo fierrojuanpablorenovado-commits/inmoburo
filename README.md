@@ -1,4 +1,4 @@
-# Solventa
+# Solventa Buró
 
 > La verdad financiera de tus candidatos.
 
@@ -73,8 +73,8 @@ DATABASE_URL="postgres://..." node prisma/seed.js
 ```
 
 ### 4. Conectar dominio Namecheap
-1. Compra `solventa.mx` en Namecheap
-2. En Vercel → Project Settings → Domains → Add `solventa.mx`
+1. Compra `solventaburo.mx` en Namecheap
+2. En Vercel → Project Settings → Domains → Add `solventaburo.mx`
 3. En Namecheap → Domain → Advanced DNS:
    - `CNAME` `www` → `cname.vercel-dns.com`
    - `A` `@` → `76.76.21.21`
@@ -91,8 +91,8 @@ DATABASE_URL="postgres://..." node prisma/seed.js
 
 ## Credenciales demo (después del seed)
 
-- **Admin**: `jp@solventa.com` / `demo123`
-- **Asesor**: `lucia@solventa.com` / `demo123`
+- **Admin**: `jp@solventaburo.com` / `demo123`
+- **Asesor**: `lucia@solventaburo.com` / `demo123`
 
 ## Modelo de datos
 
@@ -140,4 +140,4 @@ Cada `Organization` es un tenant aislado:
 
 ---
 
-Solventa · Hecho en México · 2026
+Solventa Buró · Hecho en México · 2026
