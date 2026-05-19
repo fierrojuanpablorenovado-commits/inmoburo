@@ -1,4 +1,4 @@
-// Cliente HTTP para InmoBuró API
+// Cliente HTTP para Solventa API
 const API_BASE = '/api';
 
 function getToken() { return localStorage.getItem('mb_token'); }

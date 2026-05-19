@@ -1,8 +1,8 @@
-# InmoBuró
+# Solventa
 
-> El sistema operativo del arrendamiento profesional en México.
+> La verdad financiera de tus candidatos.
 
-Plataforma SaaS multi-tenant para inmobiliarias: investigación de inquilinos con score, contratos profesionales, póliza jurídica y gestión integral del ciclo de renta.
+Plataforma SaaS multi-tenant de análisis crediticio y de solvencia para renta, auto, tarjeta e hipoteca: score explicable, predicción de cumplimiento a 12 meses, contratos profesionales, póliza jurídica y gestión integral del ciclo de crédito.
 
 ## Stack
 
@@ -73,8 +73,8 @@ DATABASE_URL="postgres://..." node prisma/seed.js
 ```
 
 ### 4. Conectar dominio Namecheap
-1. Compra `inmoburo.com` y `inmoburo.mx` en Namecheap
-2. En Vercel → Project Settings → Domains → Add `inmoburo.com`
+1. Compra `solventa.mx` en Namecheap
+2. En Vercel → Project Settings → Domains → Add `solventa.mx`
 3. En Namecheap → Domain → Advanced DNS:
    - `CNAME` `www` → `cname.vercel-dns.com`
    - `A` `@` → `76.76.21.21`
@@ -91,8 +91,8 @@ DATABASE_URL="postgres://..." node prisma/seed.js
 
 ## Credenciales demo (después del seed)
 
-- **Admin**: `jp@inmoburo.com` / `demo123`
-- **Asesor**: `lucia@inmoburo.com` / `demo123`
+- **Admin**: `jp@solventa.com` / `demo123`
+- **Asesor**: `lucia@solventa.com` / `demo123`
 
 ## Modelo de datos
 
@@ -140,4 +140,4 @@ Cada `Organization` es un tenant aislado:
 
 ---
 
-InmoBuró · Hecho en México · 2026
+Solventa · Hecho en México · 2026

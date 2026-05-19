@@ -1,4 +1,4 @@
-// INMOBURO SaaS — Multi-tenant schema
+// SOLVENTA SaaS — Multi-tenant schema
 // Cada Organization es un tenant aislado. Usuarios, datos y configuración por org.
 
 generator client {

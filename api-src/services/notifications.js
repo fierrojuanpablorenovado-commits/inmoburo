@@ -6,7 +6,7 @@ import { Resend } from 'resend';
 const resendKey = process.env.RESEND_API_KEY || '';
 const RESEND_ENABLED = resendKey.startsWith('re_');
 const resend = RESEND_ENABLED ? new Resend(resendKey) : null;
-const FROM_EMAIL = process.env.FROM_EMAIL || 'InmoBuró <onboarding@resend.dev>';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Solventa <onboarding@resend.dev>';
 
 const WA_TOKEN = process.env.WHATSAPP_TOKEN || '';
 const WA_PHONE_ID = process.env.WHATSAPP_PHONE_ID || '';
@@ -23,7 +23,7 @@ function emailTemplate({ heading, body, ctaText, ctaUrl }) {
     <div style="background:${NAVY};padding:24px 32px;color:white">
       <div style="font-family:Georgia,serif;font-size:22px;font-weight:700;letter-spacing:-.5px">
         <span style="display:inline-block;width:32px;height:32px;background:${LIME};border-radius:9px;text-align:center;line-height:32px;color:${NAVY};font-weight:900;margin-right:8px;vertical-align:middle">●</span>
-        InmoBuró
+        Solventa
       </div>
     </div>
     <div style="padding:36px 32px;color:#292524">
@@ -32,8 +32,8 @@ function emailTemplate({ heading, body, ctaText, ctaUrl }) {
       ${ctaUrl ? `<div style="margin-top:28px"><a href="${ctaUrl}" style="display:inline-block;background:${LIME};color:${NAVY};padding:14px 28px;border-radius:10px;font-weight:700;text-decoration:none;font-size:15px">${ctaText}</a></div>`:''}
     </div>
     <div style="padding:20px 32px;background:#fafaf9;border-top:1px solid #e7e5e4;color:#78716c;font-size:12px;line-height:1.6">
-      InmoBuró · Hecho en México · <a href="https://inmoburo.vercel.app" style="color:#3b3691">inmoburo.com</a><br>
-      Renta inteligente. Sin sorpresas.
+      Solventa · Hecho en México · <a href="https://solventa.vercel.app" style="color:#3b3691">solventa.com</a><br>
+      La verdad financiera de tus candidatos.
     </div>
   </div>
 </body></html>`;
@@ -126,7 +126,7 @@ export async function notifyTenantDocumentLink({ orgId, tenant, request, publicU
   await sendEmail({
     orgId,
     to: tenant.email,
-    subject: '📋 Completa tu solicitud de renta — InmoBuró',
+    subject: '📋 Completa tu solicitud — Solventa',
     body,
     ctaText: 'Subir mis documentos →',
     ctaUrl: publicUrl
@@ -134,7 +134,7 @@ export async function notifyTenantDocumentLink({ orgId, tenant, request, publicU
   if (tenant.phone) {
     await sendWhatsApp({
       orgId, to: tenant.phone,
-      body: `¡Hola ${tenant.fullName}! 👋\n\nTu asesor inmobiliario te invita a completar tu solicitud de renta del inmueble ${request.propertyAddress}.\n\nSube tus documentos aquí (es rápido, sin registro):\n${publicUrl}\n\nInmoBuró · Renta inteligente, sin sorpresas.`
+      body: `¡Hola ${tenant.fullName}! 👋\n\nTu asesor te invita a completar tu solicitud para el inmueble ${request.propertyAddress}.\n\nSube tus documentos aquí (es rápido, sin registro):\n${publicUrl}\n\nSolventa · La verdad financiera de tus candidatos.`
     });
   }
 }

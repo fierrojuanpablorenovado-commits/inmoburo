@@ -1,7 +1,7 @@
 {
-  "name": "inmoburo",
+  "name": "solventa",
   "version": "1.0.0",
-  "description": "InmoBuró — Plataforma SaaS de arrendamiento profesional",
+  "description": "Solventa — Plataforma de análisis crediticio y de solvencia",
   "type": "module",
   "scripts": {
     "dev": "node api-src/server.js",

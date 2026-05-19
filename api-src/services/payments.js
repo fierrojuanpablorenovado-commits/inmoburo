@@ -43,7 +43,7 @@ export async function createCheckoutSession({ payment, request, tenant, successU
         currency: 'mxn',
         unit_amount: Math.round(payment.amount * 100),
         product_data: {
-          name: PLAN_LABELS[request.plan] || 'Servicio InmoBuró',
+          name: PLAN_LABELS[request.plan] || 'Servicio Solventa',
           description: `Inquilino: ${tenant?.fullName || '—'} · Inmueble: ${request.propertyAddress}`
         }
       }
