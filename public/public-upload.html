@@ -5,68 +5,965 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sube tus documentos — Solventa Buró</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/assets/styles.css">
+<style>
+  :root {
+    --navy: #1e1b4b;
+    --navy-mid: #2d2a6e;
+    --navy-light: #3d3a8e;
+    --lime: #a3e635;
+    --lime-soft: #ecfccb;
+    --lime-mid: #84cc16;
+    --white: #ffffff;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-900: #111827;
+    --error: #ef4444;
+    --error-soft: #fef2f2;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-mid) 50%, #312e81 100%);
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ─────────────────────────────────────────────── */
+  .header {
+    text-align: center;
+    margin-bottom: 28px;
+    color: var(--white);
+  }
+
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .logo-mark {
+    width: 38px;
+    height: 38px;
+    background: var(--lime);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .logo-mark svg { display: block; }
+
+  .logo-name {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: -.4px;
+    color: var(--white);
+  }
+
+  .header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -.6px;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .header p {
+    font-size: 15px;
+    color: rgba(255,255,255,.65);
+    line-height: 1.55;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  /* ── Card ────────────────────────────────────────────────── */
+  .card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px 20px;
+    max-width: 560px;
+    margin: 0 auto;
+    box-shadow: 0 24px 64px rgba(0,0,0,.28);
+  }
+
+  /* ── Stepper ─────────────────────────────────────────────── */
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 28px;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    position: relative;
+  }
+
+  .step::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--gray-200);
+    z-index: 0;
+  }
+
+  .step:last-child::after { display: none; }
+
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--gray-200);
+    background: var(--white);
+    color: var(--gray-400);
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    position: relative;
+    transition: all .25s;
+  }
+
+  .step-circle.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--white);
+  }
+
+  .step-circle.done {
+    background: var(--lime);
+    border-color: var(--lime);
+    color: var(--navy);
+    font-size: 14px;
+  }
+
+  .step-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-400);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .step-label.active { color: var(--navy); }
+
+  /* ── Step 1: Info form ───────────────────────────────────── */
+  #step-info { display: block; }
+  #step-docs { display: none; }
+  #step-done { display: none; }
+
+  .section-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -.3px;
+    margin-bottom: 6px;
+  }
+
+  .section-sub {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  .field {
+    margin-bottom: 16px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin-bottom: 6px;
+  }
+
+  .field .optional {
+    font-weight: 400;
+    color: var(--gray-400);
+    font-size: 12px;
+    margin-left: 4px;
+  }
+
+  .field input {
+    width: 100%;
+    height: 46px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-900);
+    background: var(--white);
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+    -webkit-appearance: none;
+  }
+
+  .field input:focus {
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(30,27,75,.1);
+  }
+
+  .field input.error {
+    border-color: var(--error);
+    box-shadow: 0 0 0 3px rgba(239,68,68,.1);
+  }
+
+  .field-error {
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 4px;
+    display: none;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--gray-400);
+    margin-top: 4px;
+  }
+
+  /* ── Buttons ─────────────────────────────────────────────── */
+  .btn-primary {
+    width: 100%;
+    height: 50px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background .2s, transform .1s, box-shadow .2s;
+    margin-top: 8px;
+    letter-spacing: -.2px;
+    box-shadow: 0 4px 14px rgba(30,27,75,.25);
+  }
+
+  .btn-primary:active { transform: scale(.98); }
+  .btn-primary:hover { background: var(--navy-mid); box-shadow: 0 6px 20px rgba(30,27,75,.35); }
+  .btn-primary:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+  /* ── Progress bar ────────────────────────────────────────── */
+  .progress-wrap {
+    margin-bottom: 22px;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .progress-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray-700);
+  }
+
+  .progress-count {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--navy), var(--lime-mid));
+    border-radius: 99px;
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+
+  /* ── Document cards ──────────────────────────────────────── */
+  #doc-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .doc-card {
+    border: 2px dashed var(--gray-200);
+    border-radius: 14px;
+    padding: 0;
+    background: var(--gray-50);
+    transition: border-color .25s, background .25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .doc-card.uploaded {
+    border-style: solid;
+    border-color: var(--lime);
+    background: var(--lime-soft);
+  }
+
+  .doc-card.dragging {
+    border-color: var(--navy);
+    background: rgba(30,27,75,.04);
+    transform: scale(1.01);
+  }
+
+  .doc-card.uploading {
+    border-color: var(--navy-light);
+    border-style: solid;
+  }
+
+  .doc-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 14px;
+  }
+
+  .doc-emoji {
+    font-size: 26px;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+    line-height: 1;
+  }
+
+  .doc-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .doc-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-900);
+    letter-spacing: -.2px;
+    margin-bottom: 2px;
+  }
+
+  .doc-sub {
+    font-size: 12px;
+    color: var(--gray-500);
+    line-height: 1.4;
+  }
+
+  .doc-card.uploaded .doc-sub { color: var(--lime-mid); font-weight: 600; }
+
+  .doc-file-name {
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-top: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 180px;
+  }
+
+  .doc-card.uploaded .doc-file-name { color: var(--lime-mid); }
+
+  .doc-action {
+    flex-shrink: 0;
+  }
+
+  /* Upload button inside each card */
+  .btn-upload {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 0 14px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background .2s;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .btn-upload:hover { background: var(--navy-mid); }
+
+  .btn-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .doc-card.uploaded .btn-upload {
+    background: var(--white);
+    color: var(--navy);
+    border: 1.5px solid var(--gray-200);
+    font-size: 11px;
+  }
+
+  /* Checkmark badge */
+  .check-badge {
+    display: none;
+    width: 22px;
+    height: 22px;
+    background: var(--lime);
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+    flex-shrink: 0;
+  }
+
+  .doc-card.uploaded .check-badge { display: flex; }
+
+  .check-badge svg { display: block; }
+
+  /* Spinner */
+  .spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid var(--gray-200);
+    border-top-color: var(--navy);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+    flex-shrink: 0;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Drop overlay text */
+  .drop-hint {
+    font-size: 11px;
+    color: var(--gray-400);
+    text-align: center;
+    margin-top: -4px;
+    padding-bottom: 10px;
+    letter-spacing: .2px;
+  }
+
+  .doc-card.dragging .drop-hint { color: var(--navy); font-weight: 600; }
+
+  /* ── Security note ───────────────────────────────────────── */
+  .security-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 20px;
+  }
+
+  .security-note svg { flex-shrink: 0; }
+
+  .security-note p {
+    font-size: 12px;
+    color: var(--gray-500);
+    line-height: 1.5;
+  }
+
+  /* ── Done screen ─────────────────────────────────────────── */
+  #step-done {
+    text-align: center;
+    padding: 16px 0 8px;
+  }
+
+  .done-circle {
+    width: 88px;
+    height: 88px;
+    background: var(--lime);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    animation: pop .4s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  @keyframes pop {
+    from { transform: scale(0); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  .done-circle svg { display: block; }
+
+  #step-done h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -.4px;
+    margin-bottom: 10px;
+  }
+
+  #step-done p {
+    font-size: 14px;
+    color: var(--gray-500);
+    line-height: 1.6;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+
+  .done-badge {
+    display: inline-block;
+    background: var(--lime-soft);
+    color: var(--lime-mid);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 99px;
+    margin-top: 16px;
+    letter-spacing: .3px;
+  }
+
+  /* ── Toast ───────────────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--error);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    z-index: 999;
+    transition: transform .3s;
+    max-width: calc(100vw - 32px);
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── Responsive tweaks ───────────────────────────────────── */
+  @media (min-width: 480px) {
+    body { padding: 40px 24px 80px; }
+    .card { padding: 36px 32px; }
+    .header h1 { font-size: 30px; }
+    .doc-inner { padding: 18px 16px; }
+    .doc-file-name { max-width: 220px; }
+  }
+</style>
 </head>
-<body style="background:linear-gradient(135deg,var(--navy-900),var(--navy-700));min-height:100vh">
+<body>
 
-<div style="max-width:640px;margin:60px auto;padding:0 20px">
-  <div style="text-align:center;margin-bottom:30px;color:white">
-    <div class="logo" style="justify-content:center;margin-bottom:16px"><span class="logo-mark">S</span><span>Solventa Buró</span></div>
-    <h1 style="font-size:32px;font-weight:800;letter-spacing:-.8px">Sube tus documentos</h1>
-    <p style="color:rgba(255,255,255,.7);margin-top:8px">Tu asesor inmobiliario te invita a completar tu solicitud de renta. Sube cada documento en su categoría.</p>
-  </div>
-
-  <div class="card" style="padding:32px">
-    <div style="display:grid;gap:14px" id="doc-list">
-      <!-- populated by JS -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-mark">
+      <svg width="22" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 8.5A3.5 3.5 0 0 0 12.5 5h-1A3.5 3.5 0 0 0 8 8.5 3.5 3.5 0 0 0 11.5 12h1A3.5 3.5 0 0 1 16 15.5 3.5 3.5 0 0 1 12.5 19h-1A3.5 3.5 0 0 1 8 15.5"
+          stroke="#1e1b4b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
-    <p style="margin-top:20px;font-size:13px;color:var(--gray-500);text-align:center">Tus documentos están cifrados y solo son visibles para tu asesor. No los compartimos con terceros.</p>
+    <span class="logo-name">Solventa Buró</span>
   </div>
+  <h1>Análisis de solvencia</h1>
+  <p>Tu asesor necesita estos documentos para procesar tu solicitud de arrendamiento de forma segura.</p>
 </div>
 
-<script>
-const token = location.pathname.split('/').pop();
-const types = [
-  { id:'ine', name:'Identificación oficial (INE/Pasaporte)', icon:'🪪' },
-  { id:'domicilio', name:'Comprobante de domicilio', icon:'🏠' },
-  { id:'ingresos', name:'Comprobantes de ingresos (3 últimos)', icon:'💰' },
-  { id:'banco', name:'Estado de cuenta bancario', icon:'🏦' },
-  { id:'empleo', name:'Constancia de empleo', icon:'💼' },
-  { id:'referencias', name:'Referencias personales', icon:'👥' }
-];
+<div class="card">
 
-function render(uploaded = {}) {
-  document.getElementById('doc-list').innerHTML = types.map(t => `
-    <div style="display:flex;align-items:center;gap:14px;padding:18px;background:var(--gray-50);border-radius:12px;border:2px dashed ${uploaded[t.id]?'var(--teal-500)':'var(--gray-200)'}">
-      <div style="font-size:28px">${t.icon}</div>
-      <div style="flex:1">
-        <div style="font-weight:700;color:var(--navy-900)">${t.name}</div>
-        <div style="font-size:13px;color:var(--gray-500)">${uploaded[t.id] ? '✅ Subido' : 'PDF, JPG o PNG · máx 10MB'}</div>
-      </div>
-      <label class="btn btn-${uploaded[t.id]?'outline':'primary'} btn-sm">
-        ${uploaded[t.id]?'Reemplazar':'Subir archivo'}
-        <input type="file" style="display:none" accept=".pdf,.jpg,.jpeg,.png" onchange="upload('${t.id}', this)">
-      </label>
+  <!-- Stepper -->
+  <div class="stepper">
+    <div class="step">
+      <div class="step-circle active" id="sc-1">1</div>
+      <div class="step-label active" id="sl-1">Tus datos</div>
     </div>
-  `).join('');
-}
-render();
+    <div class="step">
+      <div class="step-circle" id="sc-2">2</div>
+      <div class="step-label" id="sl-2">Documentos</div>
+    </div>
+  </div>
 
-async function upload(type, input) {
-  if (!input.files[0]) return;
-  const fd = new FormData();
-  fd.append('file', input.files[0]);
-  fd.append('type', type);
-  try {
-    const r = await fetch('/api/documents/public/' + token + '/upload', { method: 'POST', body: fd });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.error);
-    const uploaded = JSON.parse(sessionStorage.getItem('uploaded')||'{}');
-    uploaded[type] = true;
-    sessionStorage.setItem('uploaded', JSON.stringify(uploaded));
-    render(uploaded);
-  } catch (e) { alert('Error: ' + e.message); }
-}
+  <!-- PASO 1: Datos personales -->
+  <div id="step-info">
+    <div class="section-title">Datos personales</div>
+    <p class="section-sub">Solo para identificarte en el expediente. Esta información está cifrada.</p>
+
+    <div class="field">
+      <label for="f-name">Nombre completo</label>
+      <input type="text" id="f-name" placeholder="Como aparece en tu INE" autocomplete="name">
+      <div class="field-error" id="e-name">Escribe tu nombre completo.</div>
+    </div>
+
+    <div class="field">
+      <label for="f-curp">CURP</label>
+      <input type="text" id="f-curp" placeholder="18 caracteres" maxlength="18" autocapitalize="characters" autocomplete="off">
+      <div class="field-error" id="e-curp">Ingresa una CURP válida (18 caracteres).</div>
+    </div>
+
+    <div class="field">
+      <label for="f-rfc">RFC <span class="optional">— opcional</span></label>
+      <input type="text" id="f-rfc" placeholder="XXXX000000XXX" maxlength="13" autocapitalize="characters" autocomplete="off">
+      <div class="field-hint">Si eres persona física con actividad empresarial.</div>
+    </div>
+
+    <div class="field">
+      <label for="f-phone">Teléfono</label>
+      <input type="tel" id="f-phone" placeholder="10 dígitos" maxlength="10" autocomplete="tel">
+      <div class="field-error" id="e-phone">Ingresa un número de 10 dígitos.</div>
+    </div>
+
+    <button class="btn-primary" id="btn-continue" onclick="submitInfo()">
+      Continuar
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+
+  <!-- PASO 2: Documentos -->
+  <div id="step-docs">
+    <div class="section-title">Sube tus 6 documentos</div>
+    <p class="section-sub">Puedes subir PDF, JPG o PNG. Máximo 10 MB por archivo.</p>
+
+    <!-- Progress -->
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">Avance</span>
+        <span class="progress-count" id="prog-count">0 de 6 listos</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill"></div>
+      </div>
+    </div>
+
+    <div id="doc-grid"></div>
+
+    <div class="security-note">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 1.5L2.25 4.5V9c0 3.45 2.88 6.675 6.75 7.5C12.87 15.675 15.75 12.45 15.75 9V4.5L9 1.5Z" stroke="#9ca3af" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M6.75 9l1.5 1.5 3-3" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p>Tus archivos están cifrados con TLS 256-bit y solo son visibles para tu asesor. No compartimos información con terceros.</p>
+    </div>
+  </div>
+
+  <!-- PASO 3: Listo -->
+  <div id="step-done">
+    <div class="done-circle">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 22L18 30L34 14" stroke="#1e1b4b" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <h2>¡Todo listo, gracias!</h2>
+    <p>Recibimos tus documentos. Tu asesor realizará el análisis de solvencia en <strong>menos de 24 horas.</strong></p>
+    <span class="done-badge">Expediente enviado correctamente</span>
+  </div>
+
+</div>
+
+<!-- Toast error -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  const token = location.pathname.split('/').pop();
+
+  const DOCS = [
+    {
+      id: 'ine',
+      emoji: '🪪',
+      name: 'INE / Pasaporte',
+      sub: 'Identificación oficial vigente, ambos lados'
+    },
+    {
+      id: 'domicilio',
+      emoji: '🏠',
+      name: 'Comprobante de domicilio',
+      sub: 'CFE, agua o teléfono, no mayor a 3 meses'
+    },
+    {
+      id: 'ingresos',
+      emoji: '💰',
+      name: 'Comprobantes de ingresos',
+      sub: 'Últimos 3 recibos de nómina'
+    },
+    {
+      id: 'banco',
+      emoji: '🏦',
+      name: 'Estado de cuenta bancario',
+      sub: 'Últimos 3 meses con membrete del banco'
+    },
+    {
+      id: 'empleo',
+      emoji: '💼',
+      name: 'Constancia de empleo',
+      sub: 'Con membrete de empresa y firma'
+    },
+    {
+      id: 'referencias',
+      emoji: '👥',
+      name: 'Referencias personales',
+      sub: '2 contactos: nombre, teléfono y relación'
+    }
+  ];
+
+  // State
+  const state = {}; // id -> { status: 'idle'|'uploading'|'done', fileName }
+  DOCS.forEach(d => { state[d.id] = { status: 'idle', fileName: null }; });
+
+  // ── Toast ──────────────────────────────────────────────────
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // ── Stepper ────────────────────────────────────────────────
+  function setStep(n) {
+    document.getElementById('step-info').style.display = n === 1 ? 'block' : 'none';
+    document.getElementById('step-docs').style.display = n === 2 ? 'block' : 'none';
+    document.getElementById('step-done').style.display = n === 3 ? 'block' : 'none';
+
+    const sc1 = document.getElementById('sc-1');
+    const sl1 = document.getElementById('sl-1');
+    const sc2 = document.getElementById('sc-2');
+    const sl2 = document.getElementById('sl-2');
+
+    if (n === 1) {
+      sc1.className = 'step-circle active'; sl1.className = 'step-label active';
+      sc2.className = 'step-circle';        sl2.className = 'step-label';
+    } else if (n === 2 || n === 3) {
+      sc1.className = 'step-circle done'; sc1.innerHTML = '✓'; sl1.className = 'step-label';
+      sc2.className = 'step-circle active'; sl2.className = 'step-label active';
+      if (n === 3) {
+        sc2.className = 'step-circle done'; sc2.innerHTML = '✓';
+        sl2.className = 'step-label';
+      }
+    }
+  }
+
+  // ── Step 1: Info form ──────────────────────────────────────
+  function validate() {
+    let ok = true;
+
+    const name = document.getElementById('f-name').value.trim();
+    const curp = document.getElementById('f-curp').value.trim().toUpperCase();
+    const phone = document.getElementById('f-phone').value.trim();
+
+    if (name.length < 3) {
+      document.getElementById('f-name').classList.add('error');
+      document.getElementById('e-name').style.display = 'block';
+      ok = false;
+    } else {
+      document.getElementById('f-name').classList.remove('error');
+      document.getElementById('e-name').style.display = 'none';
+    }
+
+    if (curp.length !== 18) {
+      document.getElementById('f-curp').classList.add('error');
+      document.getElementById('e-curp').style.display = 'block';
+      ok = false;
+    } else {
+      document.getElementById('f-curp').classList.remove('error');
+      document.getElementById('e-curp').style.display = 'none';
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      document.getElementById('f-phone').classList.add('error');
+      document.getElementById('e-phone').style.display = 'block';
+      ok = false;
+    } else {
+      document.getElementById('f-phone').classList.remove('error');
+      document.getElementById('e-phone').style.display = 'none';
+    }
+
+    return ok;
+  }
+
+  window.submitInfo = async function () {
+    if (!validate()) return;
+
+    const btn = document.getElementById('btn-continue');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="border-top-color:#a3e635"></div>';
+
+    const body = {
+      fullName: document.getElementById('f-name').value.trim(),
+      curp: document.getElementById('f-curp').value.trim().toUpperCase(),
+      rfc: document.getElementById('f-rfc').value.trim().toUpperCase() || null,
+      phone: document.getElementById('f-phone').value.trim()
+    };
+
+    try {
+      const r = await fetch('/api/documents/public/' + token + '/info', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        throw new Error(d.error || 'Error al guardar datos.');
+      }
+      setStep(2);
+      renderDocs();
+    } catch (e) {
+      showToast(e.message);
+      btn.disabled = false;
+      btn.innerHTML = 'Continuar <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
+  };
+
+  // ── Step 2: Docs ───────────────────────────────────────────
+  function countDone() {
+    return DOCS.filter(d => state[d.id].status === 'done').length;
+  }
+
+  function updateProgress() {
+    const done = countDone();
+    const pct = Math.round((done / DOCS.length) * 100);
+    document.getElementById('prog-fill').style.width = pct + '%';
+    document.getElementById('prog-count').textContent = done + ' de ' + DOCS.length + ' listos';
+    if (done === DOCS.length) {
+      setTimeout(() => setStep(3), 700);
+    }
+  }
+
+  function renderDocs() {
+    const grid = document.getElementById('doc-grid');
+    grid.innerHTML = '';
+    DOCS.forEach(doc => {
+      const s = state[doc.id];
+      const card = document.createElement('div');
+      card.className = 'doc-card' + (s.status === 'done' ? ' uploaded' : '') + (s.status === 'uploading' ? ' uploading' : '');
+      card.id = 'card-' + doc.id;
+
+      let actionHtml = '';
+      if (s.status === 'uploading') {
+        actionHtml = '<div class="spinner"></div>';
+      } else if (s.status === 'done') {
+        actionHtml = `
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0">
+            <div class="check-badge">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5l3 3 5-5" stroke="#1e1b4b" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <label class="btn-upload">
+              Cambiar
+              <input type="file" accept=".pdf,.jpg,.jpeg,.png" data-id="${doc.id}">
+            </label>
+          </div>`;
+      } else {
+        actionHtml = `
+          <label class="btn-upload">
+            Subir
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" data-id="${doc.id}">
+          </label>`;
+      }
+
+      let fileNameHtml = s.fileName
+        ? `<div class="doc-file-name" title="${s.fileName}">${s.fileName}</div>`
+        : '';
+
+      card.innerHTML = `
+        <div class="doc-inner">
+          <div class="doc-emoji">${doc.emoji}</div>
+          <div class="doc-info">
+            <div class="doc-name">${doc.name}</div>
+            <div class="doc-sub">${s.status === 'done' ? 'Subido correctamente' : doc.sub}</div>
+            ${fileNameHtml}
+          </div>
+          <div class="doc-action">${actionHtml}</div>
+        </div>
+        <div class="drop-hint">o arrastra el archivo aquí</div>
+      `;
+
+      // File input change
+      const input = card.querySelector('input[type="file"]');
+      if (input) {
+        input.addEventListener('change', function () {
+          if (this.files[0]) handleFile(doc.id, this.files[0]);
+        });
+      }
+
+      // Drag & drop
+      card.addEventListener('dragover', e => { e.preventDefault(); card.classList.add('dragging'); });
+      card.addEventListener('dragleave', () => card.classList.remove('dragging'));
+      card.addEventListener('drop', e => {
+        e.preventDefault();
+        card.classList.remove('dragging');
+        const file = e.dataTransfer.files[0];
+        if (file) handleFile(doc.id, file);
+      });
+
+      grid.appendChild(card);
+    });
+    updateProgress();
+  }
+
+  async function handleFile(id, file) {
+    const MAX = 10 * 1024 * 1024;
+    if (file.size > MAX) { showToast('El archivo supera el límite de 10 MB.'); return; }
+
+    const allowed = ['application/pdf', 'image/jpeg', 'image/png'];
+    if (!allowed.includes(file.type)) { showToast('Solo se aceptan PDF, JPG o PNG.'); return; }
+
+    state[id].status = 'uploading';
+    state[id].fileName = null;
+    renderDocs();
+
+    const fd = new FormData();
+    fd.append('file', file);
+    fd.append('type', id);
+
+    try {
+      const r = await fetch('/api/documents/public/' + token + '/upload', {
+        method: 'POST',
+        body: fd
+      });
+      if (!r.ok) {
+        const d = await r.json().catch(() => ({}));
+        throw new Error(d.error || 'Error al subir el archivo.');
+      }
+      state[id].status = 'done';
+      state[id].fileName = file.name;
+    } catch (e) {
+      state[id].status = 'idle';
+      showToast(e.message);
+    }
+
+    renderDocs();
+  }
+
+  // Init
+  setStep(1);
+})();
 </script>
 </body>
 </html>

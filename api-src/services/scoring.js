@@ -85,3 +85,84 @@ function hashStr(s) {
   }
   return Math.abs(h);
 }
+
+export function calculateScoreWithNubarium({ tenant, monthlyRent, documentsValidated, withFiador, nubariumData }) {
+  if (!nubariumData) return calculateScore({ tenant, monthlyRent, documentsValidated, withFiador });
+
+  let score = 50;
+  const { curp, imss, rfc, blacklists, emailRisk, phoneRisk, ine } = nubariumData;
+
+  // Capacidad de pago — usa salario IMSS verificado si está disponible
+  const income = imss?.lastSalary || tenant.monthlyIncome || 0;
+  const ratio = monthlyRent > 0 ? income / monthlyRent : 0;
+  let capacityPoints = 0;
+  if (ratio >= 4) capacityPoints = 25;
+  else if (ratio >= 3) capacityPoints = 20;
+  else if (ratio >= 2.5) capacityPoints = 12;
+  else if (ratio >= 2) capacityPoints = 5;
+  else capacityPoints = -10;
+  score += capacityPoints;
+
+  // Documentos
+  score += Math.min(15, documentsValidated * 3);
+
+  // Identidad Nubarium
+  const identityVerified = ine?.valid && curp?.valid;
+  if (identityVerified) score += 10;
+  else if (curp?.valid) score += 5;
+  else score -= 5;
+
+  // RFC válido
+  if (rfc?.valid && rfc?.status === 'ACTIVO') score += 5;
+
+  // Antigüedad laboral IMSS real
+  const tenureMonths = imss?.totalMonths || 0;
+  let tenurePoints = 0;
+  if (tenureMonths >= 60) tenurePoints = 10;
+  else if (tenureMonths >= 24) tenurePoints = 6;
+  else if (tenureMonths >= 12) tenurePoints = 3;
+  else tenurePoints = -3;
+  score += tenurePoints;
+
+  // Empleo activo
+  if (imss?.currentlyEmployed) score += 5;
+
+  // Listas negras reales
+  const blacklistOk = blacklists?.clean !== false;
+  if (!blacklistOk) score -= 30;
+
+  // Email/Phone risk
+  if (emailRisk?.risk === 'high') score -= 5;
+  if (phoneRisk?.risk === 'high') score -= 5;
+
+  // Fiador
+  if (withFiador) score += 5;
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  let fraudRisk = score < 40 ? 'high' : score < 65 ? 'medium' : 'low';
+
+  return {
+    score,
+    identityOk: !!(ine?.valid || curp?.valid),
+    creditOk: true, // sin Círculo de Crédito, marcamos como no evaluado
+    legalOk: blacklistOk,
+    blacklistOk,
+    fraudRisk,
+    capacityRatio: Number(ratio.toFixed(2)),
+    incomeSalarioIMSS: imss?.lastSalary || null,
+    incomeSource: imss?.lastSalary ? 'imss_verificado' : 'declarado',
+    empleoActivo: imss?.currentlyEmployed || false,
+    mesesCotizados: tenureMonths,
+    breakdown: {
+      base: 50,
+      capacityPoints,
+      documentsPoints: Math.min(15, documentsValidated * 3),
+      identityPoints: identityVerified ? 10 : curp?.valid ? 5 : -5,
+      rfcPoints: rfc?.valid ? 5 : 0,
+      tenurePoints,
+      empleoPoints: imss?.currentlyEmployed ? 5 : 0,
+      legalPenalty: blacklistOk ? 0 : -30,
+      riskPenalty: (emailRisk?.risk === 'high' ? -5 : 0) + (phoneRisk?.risk === 'high' ? -5 : 0)
+    }
+  };
+}

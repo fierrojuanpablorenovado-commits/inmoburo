@@ -19,6 +19,7 @@ import activityRouter from './routes/activity.js';
 import dashboardRouter from './routes/dashboard.js';
 import { handleStripeWebhook, isStripeEnabled } from './services/payments.js';
 import { isResendEnabled, isWhatsAppEnabled } from './services/notifications.js';
+import { isNubariumEnabled } from './services/nubarium.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -41,7 +42,7 @@ app.use(express.json({ limit: '5mb' }));
 
 app.get('/api/health', (req, res) => res.json({
   ok: true, app: 'solventaburo', version: '1.0.0', time: new Date().toISOString(),
-  integrations: { stripe: isStripeEnabled, email: isResendEnabled, whatsapp: isWhatsAppEnabled }
+  integrations: { stripe: isStripeEnabled, email: isResendEnabled, whatsapp: isWhatsAppEnabled, nubarium: isNubariumEnabled }
 }));
 app.use('/api/auth', authRouter);
 app.use('/api/organization', organizationsRouter);

@@ -14,3 +14,4 @@ uploads/
 prisma/migrations/
 
 .vercel
+.env*.local
