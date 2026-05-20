@@ -17,6 +17,7 @@ import policiesRouter from './routes/policies.js';
 import paymentsRouter from './routes/payments.js';
 import activityRouter from './routes/activity.js';
 import dashboardRouter from './routes/dashboard.js';
+import cronRouter from './routes/cron.js';
 import { handleStripeWebhook, isStripeEnabled } from './services/payments.js';
 import { isResendEnabled, isWhatsAppEnabled } from './services/notifications.js';
 import { isNubariumEnabled } from './services/nubarium.js';
@@ -56,6 +57,7 @@ app.use('/api/policies', policiesRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/activity', activityRouter);
 app.use('/api/dashboard', dashboardRouter);
+app.use('/api/cron', cronRouter);
 
 // Static frontend (en local dev). En Vercel, los estáticos los sirve la plataforma desde /public.
 const PUBLIC_DIR = path.resolve(__dirname, '../public');

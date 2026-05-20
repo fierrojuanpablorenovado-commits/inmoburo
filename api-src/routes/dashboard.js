@@ -7,7 +7,9 @@ router.use(authRequired);
 
 router.get('/stats', async (req, res) => {
   const orgId = req.orgId;
-  const [totalReq, validated, rejected, inReview, activeContracts, paidPayments, pendingPayments, totalTenants, reports] = await Promise.all([
+  const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+
+  const [totalReq, validated, rejected, inReview, activeContracts, paidPayments, pendingPayments, totalTenants, reports, monthlyRevenue, byPlan] = await Promise.all([
     prisma.rentalRequest.count({ where: { organizationId: orgId }}),
     prisma.rentalRequest.count({ where: { organizationId: orgId, status: 'validado' }}),
     prisma.rentalRequest.count({ where: { organizationId: orgId, status: 'rechazado' }}),
@@ -16,7 +18,16 @@ router.get('/stats', async (req, res) => {
     prisma.payment.aggregate({ where: { organizationId: orgId, status: 'paid' }, _sum: { amount: true }, _count: true }),
     prisma.payment.aggregate({ where: { organizationId: orgId, status: 'pending' }, _sum: { amount: true }, _count: true }),
     prisma.tenant.count({ where: { organizationId: orgId }}),
-    prisma.report.findMany({ where: { request: { organizationId: orgId }}, select: { score: true }})
+    prisma.report.findMany({ where: { request: { organizationId: orgId }}, select: { score: true }}),
+    prisma.payment.aggregate({
+      where: { organizationId: orgId, status: 'paid', createdAt: { gte: startOfMonth } },
+      _sum: { amount: true }
+    }),
+    prisma.rentalRequest.groupBy({
+      by: ['plan'],
+      where: { organizationId: orgId },
+      _count: { _all: true }
+    })
   ]);
 
   const avgScore = reports.length ? Math.round(reports.reduce((s,r)=>s+r.score,0)/reports.length) : 0;
@@ -30,8 +41,10 @@ router.get('/stats', async (req, res) => {
     else distribution.poor++;
   });
 
+  const validationRate = totalReq ? Math.round(validated / totalReq * 100) : 0;
+
   res.json({
-    requests: { total: totalReq, validated, rejected, inReview, validationRate: totalReq ? Math.round(validated/totalReq*100) : 0 },
+    requests: { total: totalReq, validated, rejected, inReview, validationRate },
     contracts: { active: activeContracts },
     tenants: { total: totalTenants },
     revenue: {
@@ -40,7 +53,17 @@ router.get('/stats', async (req, res) => {
       pending: pendingPayments._sum.amount || 0,
       pendingCount: pendingPayments._count
     },
-    scoring: { avg: avgScore, totalReports: reports.length, distribution }
+    scoring: { avg: avgScore, totalReports: reports.length, distribution },
+    kpis: {
+      totalRequests: totalReq,
+      approvedRequests: validated,
+      rejectedRequests: rejected,
+      pendingRequests: inReview,
+      approvalRate: validationRate,
+      avgScore,
+      monthlyRevenue: monthlyRevenue._sum.amount || 0,
+      byPlan: byPlan.map(p => ({ plan: p.plan, count: p._count._all }))
+    }
   });
 });
 

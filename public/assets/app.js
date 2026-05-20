@@ -1,5 +1,5 @@
-/* INMOBURO SaaS — Frontend conectado al backend
-   ============================================== */
+/* SOLVENTA BURÓ — Panel SaaS · solventaburo.vercel.app
+   ====================================================== */
 
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);

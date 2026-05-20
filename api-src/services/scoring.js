@@ -144,7 +144,8 @@ export function calculateScoreWithNubarium({ tenant, monthlyRent, documentsValid
   return {
     score,
     identityOk: !!(ine?.valid || curp?.valid),
-    creditOk: true, // sin Círculo de Crédito, marcamos como no evaluado
+    creditOk: null, // null = no evaluado (diferente de true = ok o false = problema)
+    creditNotEvaluated: true,
     legalOk: blacklistOk,
     blacklistOk,
     fraudRisk,
@@ -162,7 +163,8 @@ export function calculateScoreWithNubarium({ tenant, monthlyRent, documentsValid
       tenurePoints,
       empleoPoints: imss?.currentlyEmployed ? 5 : 0,
       legalPenalty: blacklistOk ? 0 : -30,
-      riskPenalty: (emailRisk?.risk === 'high' ? -5 : 0) + (phoneRisk?.risk === 'high' ? -5 : 0)
+      riskPenalty: (emailRisk?.risk === 'high' ? -5 : 0) + (phoneRisk?.risk === 'high' ? -5 : 0),
+      creditNote: 'Historial crediticio no evaluado — Círculo de Crédito pendiente de integración'
     }
   };
 }
